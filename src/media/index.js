@@ -1,4 +1,4 @@
-export {InlineMath, BlockMath, IFrame} from "./schema"
+export {InlineMath, BlockMath, IFrame, mediaSpec} from "./schema"
 import "./parse"
 import "./serialize"
 import "./commands"

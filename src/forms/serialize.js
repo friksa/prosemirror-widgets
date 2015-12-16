@@ -1,6 +1,6 @@
 import {Paragraph, Block, Textblock, Inline, Text, Attribute, MarkType} from "../../../prosemirror/dist/model/defaultschema"
-import {Choice, MultipleChoice, Scale, Checkitem, Checklist, Textfield, Checkbox, Textarea, Select, formSchema} from "./schema"
-import {elt, insertCSS} from "../../../prosemirror/dist/dom"
+import {Choice, MultipleChoice, Scale, Checkitem, Checklist, Textfield, Checkbox, Textarea, Select} from "./schema"
+import {elt} from "../../../prosemirror/dist/dom"
 
 MultipleChoice.prototype.serializeDOM = node => {
 	let dom = elt("div",{class: "multiplechoice"})
@@ -30,6 +30,13 @@ Scale.prototype.serializeDOM = node => {
 		)
 	}
 	dom.appendChild(elt("span", {}, " "+node.attrs.maxlabel))
+/*	dom.addEventListener("dblclick", e => {
+		e.preventDefault()
+		console.log("dblclick")
+		//item.exec(pm, [o.value])
+		//finish()
+    })
+*/
 	return dom
 }
 
@@ -49,45 +56,47 @@ Checklist.prototype.serializeDOM = node => {
 
 Textfield.prototype.serializeDOM = node => {
 	let loc = node.attrs.loc
+	let input = elt("input", {name: node.attrs.name, type:"text", size: node.attrs.size})
 	if (loc == "left")
-		return elt("span",{class: "textfield"},
-		elt("label",{for: node.attrs.name}, node.attrs.label + " "),
-		elt("input", {id: node.attrs.name, name: node.attrs.name, type:"text", size: node.attrs.size}))
+		return elt("label",{class: "textfield"}, 
+			node.attrs.label + " ",
+			input
+		)
 	else if (loc == "top") {
-		return elt("span",{class: "textfield"},
-		elt("label",{for: node.attrs.name}, node.attrs.label + " "), elt("br"),
-		elt("input", {id: node.attrs.name, name: node.attrs.name, type:"text", size: node.attrs.size}))
+		return elt("label",{class: "textfield"}, 
+			node.attrs.label,
+			elt("br"),
+			input
+		)
 	} else {
-		return elt("span",{class: "textfield"},
-		elt("input", {id: node.attrs.name, name: node.attrs.name, type:"text", size: node.attrs.size}),
-		elt("label",{for: node.attrs.name}, node.attrs.label + " "))
+		return 	elt("label",{class: "textfield"},
+			input,
+			" "+node.attrs.label
+		)
 	}
 }
 
 Textarea.prototype.serializeDOM = node => {
-	return elt("div",{class: "textarea"},
-		elt("label",{for: node.attrs.name},node.attrs.label),
-		elt("textarea", {id: node.attrs.name, name: node.attrs.name, rows: node.attrs.rows, cols: node.attrs.cols})
+	return elt("label",{class: "textarea"},node.attrs.label+" ",
+		elt("textarea", {name: node.attrs.name, rows: node.attrs.rows, cols: node.attrs.cols})
 	)
 }
 
 Checkbox.prototype.serializeDOM = node => {
-	return elt("span",{class: "checkbox"}, 
-		elt("input",{id: node.attrs.name, type: "checkbox", value: node.attrs.name}),
-		elt("label",{for: node.attrs.name}," "+node.attrs.label)
+	return elt("label",{class: "checkbox"}, 
+		elt("input",{type: "checkbox", name: node.attrs.name}),
+		" "+node.attrs.label
 	)
 }
 
 Select.prototype.serializeDOM = node => {
 	let selection = node.attrs.multiple == "multiple"
-	let dom = elt("select",{id: node.attrs.name, class: "select", size: 1, multiple: selection})
+	let label = node.attrs.label? node.attrs.label+" ":""
+	let select = elt("select",{id: node.attrs.name, class: "select", size: 1, multiple: selection})
 	node.attrs.options.split(",").map(function(option) {
-		dom.appendChild(elt("option", {value: option.trim()}, option))
+		select.appendChild(elt("option", {value: option.trim()}, option))
 	})
-	return elt("div",{class: "select"},
-		elt("label",{for: node.attrs.name}, node.attrs.label+" "),
-		dom
-	)
+	return elt("label",{class: "select"}, label, select)
 }
 
 

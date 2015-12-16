@@ -1,3 +1,8 @@
+import {InlineMath, BlockMath, IFrame} from "./schema"
+
+const defW = "200"
+const defH = "200"
+
 InlineMath.attachCommand("insertInlineMath", function(type) {
 	return {
 		label: "InlineMath",
@@ -30,6 +35,11 @@ BlockMath.attachCommand("insertBlockMath", function(type) {
 	    menuGroup: "block",
 	    menuRank: 90,
 	    icon: { css: "background: url('icons/equation.gif') no-repeat; height: 10px"},
+	    prefillParams(pm) {
+	      let {node} = pm.selection
+	      if (node && node.type == type)
+	        return [node.attrs.tex]
+	    }
 	}
 })  
 
@@ -45,9 +55,9 @@ IFrame.attachCommand("insertIFrame", function(type) {
 	     	{ name: "Height in pixels", type: "text", default: defH },
 		],
 	    menuGroup: "block",
-	    menuRank: 97,
-	    icon: { css: "background: url('icons/media.gif') no-repeat; height: 10px"},
-	    prefillParams(pm) {
+	    menuRank: 91,
+	    icon: { css: "background: url('icons/world.png') no-repeat; height: 12px"},
+	  	prefillParams(pm) {
 	      let {node} = pm.selection
 	      if (node && node.type == type)
 	        return [node.attrs.src, node.attrs.width, node.attrs.height]

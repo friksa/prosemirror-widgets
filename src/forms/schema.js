@@ -77,5 +77,3 @@ export const formSpec = new SchemaSpec({
 	checkbox: Checkbox,
 	select: Select	
 })
-
-export const formSchema = new Schema(defaultSchema.spec.updateNodes(formSpec.nodes))

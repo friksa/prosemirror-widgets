@@ -1,3 +1,6 @@
+import {InlineMath, BlockMath, IFrame} from "./schema"
+import {elt} from "../../../prosemirror/dist/dom"
+
 MathJax.Hub.Queue(function () {
     MathJax.Hub.Config({
     	tex2jax: {
@@ -37,6 +40,7 @@ IFrame.prototype.serializeDOM = node => {
 		  width: node.attrs.width,
 		  height: node.attrs.height,
 		  content: "text/html;charset=UTF-8",
+		  class: "iframe",
 		  frameborder: "1",
 		  allowfullscreen: "1"
 		})

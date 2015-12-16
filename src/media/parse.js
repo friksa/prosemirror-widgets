@@ -1,3 +1,5 @@
+import {InlineMath, BlockMath, IFrame} from "./schema"
+
 function def(type,tag,clazz) {
 	type.register("parseDOM", {
 		tag: tag,

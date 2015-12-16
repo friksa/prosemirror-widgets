@@ -1,5 +1,5 @@
 import {Paragraph, Block, Textblock, Inline, Attribute} from "../../../prosemirror/dist/model"
-import {Schema, defaultSchema} from "../../../prosemirror/dist/model"
+import {SchemaSpec} from "../../../prosemirror/dist/model"
 
 const defW = "200"
 const defH = "200"
