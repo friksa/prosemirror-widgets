@@ -35,7 +35,7 @@ Widget.register("command", {
 	menuRank: 99
 })
 
-const widgetSchema = new Schema(defaultSchema.spec.updateNodes(formSpec.nodes).updateNodes(mediaSpec.nodes).updateNodes({Widget}))
+const widgetSchema = new Schema(defaultSchema.spec.update(formSpec.nodes).update(mediaSpec.nodes).update({Widget}))
 
 let pm = window.pm = new ProseMirror({
   place: document.querySelector("#editor"),
@@ -62,7 +62,7 @@ div.ProseMirror-select-menu div {
 }
 
 div.ProseMirror-select-menu div:hover {
-  background: #EEE;
+  background: white;
 }
 
 div.ProseMirror-menu form {
@@ -72,21 +72,21 @@ div.ProseMirror-menu form {
 }
 
 div.ProseMirror-menu form select {
-	background: #EEE;
+	background: white;
 }
 
 div.ProseMirror-menubar-sliding {
-	  -webkit-transition: right 0.2s ease-out;
-	  -moz-transition: right 0.2s ease-out;
-	  transition: right 0.2s ease-out;
-	  position: relative;
-	  left: 100%;
-	  width: 100%;
-	  box-sizing: -moz-border-box;
-	  box-sizing: border-box;
-	  padding-left: 16px;
-	  background: white;
-	}
+  -webkit-transition: right 0.2s ease-out;
+  -moz-transition: right 0.2s ease-out;
+  transition: right 0.2s ease-out;
+  position: relative;
+  left: 100%;
+  width: 100%;
+  box-sizing: -moz-border-box;
+  box-sizing: border-box;
+  padding-left: 16px;
+  background: white;
+}
 
 
 `)

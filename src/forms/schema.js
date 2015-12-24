@@ -1,27 +1,65 @@
-import {Paragraph, Block, Textblock, Inline, Attribute} from "../../../prosemirror/dist/model"
+import {Paragraph, Block, Textblock, Inline, Node, Attribute} from "../../../prosemirror/dist/model"
 import {SchemaSpec, Schema, defaultSchema} from "../../../prosemirror/dist/model"
 
-export class Choice extends Block {}
+export class Input extends Inline {}
+
+export class Checkbox extends Input {}
+
+Checkbox.attributes = {
+	name: new Attribute(),
+	type: new Attribute({default: "checkbox"}),
+	class: new Attribute({default: "checkbox"}),
+}
+
+export class Radiobutton extends Input {}
+
+Radiobutton.attributes = {
+	name: new Attribute(),
+	type: new Attribute({default: "radio"}),
+	class: new Attribute({default: "radiobutton"}),
+}
+
+export class Textfield extends Input {}
+
+Textfield.attributes = {
+	name: new Attribute(),
+	size: new Attribute({default: "20"}),
+	type: new Attribute({default: "text"}),
+	class: new Attribute({default: "textfield"}),
+}
+
+export class Textarea extends Block {}
+
+Textarea.attributes = {
+	name: new Attribute(),
+	rows: new Attribute(),
+	cols: new Attribute(),
+	class: new Attribute({default: "textarea"})
+}
+
+export class Choice extends Textblock {}
 
 export class MultipleChoice extends Block {
-	static get contains() { return "choice" }
+	static get contains() { return "choice"}
 }
 
 MultipleChoice.attributes = {
 	name: new Attribute()
 }
 
-export class Scale extends Inline {}
+export class Scale extends Block {}
 
 Scale.attributes = {
 	name: new Attribute(),
-	minvalue: new Attribute({default: "1"}),
-	minlabel: new Attribute({default: "low"}),
-	maxvalue: new Attribute({default: "10"}),
-	maxlabel: new Attribute({default: "high"}),
+	startvalue: new Attribute({default: "1"}),
+	startlabel: new Attribute({default: "low"}),
+	endvalue: new Attribute({default: "10"}),
+	endlabel: new Attribute({default: "high"}),
 }
 
-export class Checkitem extends Block {}
+export class Checkitem extends Paragraph {
+	static get kind() { return "." }
+}
 
 export class Checklist extends Block {
 	static get contains() { return "checkitem" }
@@ -29,44 +67,20 @@ export class Checklist extends Block {
 
 Checklist.attributes = {
 	name: new Attribute(),
-	direction: new Attribute({default: "vertical"})
+	layout: new Attribute({default: "vertical"})
 }
 
-export class Textfield extends Inline {}
-
-Textfield.attributes = {
-	name: new Attribute(),
-	label: new Attribute(),
-	loc: new Attribute(),
-	size: new Attribute({default: "20"})
-}
-
-
-export class Textarea extends Block {}
-Textarea.attributes = {
-	name: new Attribute(),
-	label: new Attribute(),
-	rows: new Attribute(),
-	cols: new Attribute()
-}
-
-export class Checkbox extends Inline {}
-
-Checkbox.attributes = {
-	name: new Attribute(),
-	label: new Attribute(),
-}
 
 export class Select extends Inline {}
 
 Select.attributes = {
 	name: new Attribute(),
-	label: new Attribute(),
 	options: new Attribute(),
     multiple: new Attribute({default: "single"})
 }
 
 export const formSpec = new SchemaSpec({
+	input: Input,
 	choice: Choice,
 	multiplechoice: MultipleChoice,
 	scale: Scale,

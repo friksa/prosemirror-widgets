@@ -1,4 +1,4 @@
-export {MultipleChoice, Choice, Scale, Checkitem, Checklist, Textfield, Textarea, Checkbox, formSpec} from "./schema"
+export {Input, Textfield, Checkbox, Textarea, Select, Choice, MultipleChoice, Scale, Checkitem, Checklist, formSpec} from "./schema"
 import "./parse"
 import "./serialize"
 import "./commands"
