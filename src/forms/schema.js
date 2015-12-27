@@ -8,7 +8,7 @@ export class Checkbox extends Input {}
 Checkbox.attributes = {
 	name: new Attribute(),
 	type: new Attribute({default: "checkbox"}),
-	class: new Attribute({default: "checkbox"}),
+	value: new Attribute(),
 }
 
 export class Radiobutton extends Input {}
@@ -16,16 +16,15 @@ export class Radiobutton extends Input {}
 Radiobutton.attributes = {
 	name: new Attribute(),
 	type: new Attribute({default: "radio"}),
-	class: new Attribute({default: "radiobutton"}),
+	value: new Attribute(),
 }
 
 export class Textfield extends Input {}
 
 Textfield.attributes = {
 	name: new Attribute(),
-	size: new Attribute({default: "20"}),
 	type: new Attribute({default: "text"}),
-	class: new Attribute({default: "textfield"}),
+	size: new Attribute({default: "20"})
 }
 
 export class Textarea extends Block {}
@@ -33,11 +32,22 @@ export class Textarea extends Block {}
 Textarea.attributes = {
 	name: new Attribute(),
 	rows: new Attribute(),
-	cols: new Attribute(),
-	class: new Attribute({default: "textarea"})
+	cols: new Attribute()
 }
 
-export class Choice extends Textblock {}
+export class Choice extends Paragraph {
+	static get kind() { return "." }
+
+	create(attrs, content, marks) {
+		if (attrs.value > 0) content = [this.schema.node("radiobutton",attrs)]
+		return super.create(attrs, content, marks)
+	}
+}
+
+Choice.attributes = {
+	name: new Attribute(),
+	value: new Attribute()
+}
 
 export class MultipleChoice extends Block {
 	static get contains() { return "choice"}
@@ -81,13 +91,14 @@ Select.attributes = {
 
 export const formSpec = new SchemaSpec({
 	input: Input,
+	textfield: Textfield,
+	textarea: Textarea,
+	checkbox: Checkbox,
+	radiobutton: Radiobutton,
+	select: Select,	
 	choice: Choice,
 	multiplechoice: MultipleChoice,
 	scale: Scale,
 	checkitem: Checkitem,
-	checklist: Checklist,
-	textfield: Textfield,
-	textarea: Textarea,
-	checkbox: Checkbox,
-	select: Select	
+	checklist: Checklist
 })

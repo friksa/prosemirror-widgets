@@ -12,12 +12,13 @@ function def(type,tag,cls) {
 	})	
 }
 
-def(Checkbox,"label","checkbox")
-def(Textfield,"label","textfield")
-def(Textarea,"label","textarea")
-def(Select,"label","select")
+def(Checkbox,"input","radiobutton")
+def(Checkbox,"input","checkbox")
+def(Textfield,"input","textfield")
+def(Textarea,"input","textarea")
+def(Select,"select","select")
 
-def(Choice,"label","choice")
+def(Choice,"p","choice")
 def(MultipleChoice,"div","multiplechoice")
 def(Scale,"div","scale")
 def(Checklist,"div","checklist")

@@ -1,32 +1,20 @@
 import {Paragraph, Block, Textblock, Inline, Text, Attribute, MarkType} from "../../../prosemirror/dist/model/defaultschema"
-import {Input, Textfield, Checkbox, Textarea, Choice, Select, MultipleChoice, Scale, Checkitem, Checklist, formSpec} from "./schema"
+import {Input, Textfield, Checkbox, Radiobutton, Textarea, Choice, Select, MultipleChoice, Scale, Checkitem, Checklist, formSpec} from "./schema"
 import {elt} from "../../../prosemirror/dist/dom"
 
 Input.prototype.serializeDOM = (node,s) => s.renderAs(node,"input",node.attrs)
 
 Textarea.prototype.serializeDOM = (node,s) => s.renderAs(node,"textarea",node.attrs)
 
-Choice.prototype.serializeDOM = (node,s) => {
-/*	let child = node.content
-	child.attrs.name = node.attrs.name
-	child.attrs.value = node.attrs.value
-*/	return s.renderAs(node,"div",{class: "choice"})
-}
+Choice.prototype.serializeDOM = (node,s) => s.renderAs(node,"p", {name: node.attrs.name, value: node.attrs.value, class: "choice"})
 
-MultipleChoice.prototype.serializeDOM = (node,s) => {
-	node.forEach((child,start,end) => {
-		child.attrs["name"] = node.attrs.name
-		child.attrs["value"] = start
-	})
-	return s.renderAs(node,"div",{class: "multiplechoice"})
-}
+MultipleChoice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",{class: "multiplechoice"})
 
 Scale.prototype.serializeDOM = node => {
 	let dom = elt("div",{class: "scale"})
 	dom.appendChild(elt("span", null, node.attrs.startlabel+" "))
 	let startVal = Number(node.attrs.startvalue)
 	let endVal = Number(node.attrs.endvalue)
-	console.log(startVal+":"+endVal)
 	if (startVal < endVal)
 		for (let i = startVal; i <= endVal; i++) {
 			dom.appendChild(
