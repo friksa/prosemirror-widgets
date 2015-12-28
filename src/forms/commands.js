@@ -1,7 +1,7 @@
 import {Choice, MultipleChoice, Scale, Checkitem, Checklist, Textfield, Checkbox, Textarea, Select, formSchema} from "./schema"
 import {readParams} from "../../../prosemirror/dist/menu/menu"
 import {Pos,Fragment} from "../../../prosemirror/dist/model"
-import {selectableNodeAbove} from "../../../prosemirror/dist/edit/selection"
+import {selectableNodeAbove, findSelectionFrom} from "../../../prosemirror/dist/edit/selection"
 
 const andScroll = {scrollIntoView: true}
 
@@ -97,7 +97,6 @@ Choice.register("command", {
   label: "delete this choice",
   run(pm) {
     let {head, empty} = pm.selection
-    // radiobutton is first 
     if (!empty || head.offset > 1) return false
     // Find the node before this one
     let before, cut
@@ -105,8 +104,9 @@ Choice.register("command", {
       cut = head.shorten(i)
       before = pm.doc.path(cut.path).child(cut.offset - 1)
     }
-    // Apply the joining algorithm
-    return deleteBarrier(pm, cut)
+    //let selAfter = findSelectionFrom(pm.doc, cut, 1)
+    //return pm.tr.lift(selAfter.from, selAfter.to).apply()
+    return pm.tr.delete(cut, cut).apply(andScroll)
   },
   key: ["Backspace(50)", "Mod-Backspace(50)"]
 })
@@ -147,7 +147,21 @@ Scale.register("command",{
 	    if (node)
 	      return [node.attrs.name, node.attrs.startvalue, node.attrs.startlabel, node.attrs.endvalue, node.attrs.endlabel]
 	 }
-}) 
+})
+
+Checkitem.register("command", {
+  name: "splitCheckitem",
+  label: "Split the current checkitem",
+  run(pm) {
+    let {node, from, to} = pm.selection
+    if ((node && node.isBlock) ||
+        from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
+    let toParent = from.shorten(), grandParent = pm.doc.path(toParent.path)
+    return pm.tr.delete(from, to).split(from, 1, pm.schema.nodes.choice, {name: grandParent.attrs.name, value: grandParent.size}).apply(andScroll)
+  },
+  key: "Enter(50)"
+})
+
 
 Checklist.register("command", {
 	name: "insertChecklist",
@@ -171,27 +185,6 @@ Checklist.register("command", {
 	 }
 })
 
-function deleteBarrier(pm, cut) {
-  let around = pm.doc.path(cut.path)
-  let before = around.child(cut.offset - 1), after = around.child(cut.offset)
-  console.log(before)
-  console.log(after)
-  if (before.type.canContainContent(after.type) && pm.tr.join(cut).apply(andScroll) !== false)
-    return
-
-  let conn
-  if (after.isTextblock && (conn = before.type.findConnection(after.type))) {
-    let tr = pm.tr, end = cut.move(1)
-    tr.step("ancestor", cut, end, null, {types: [before.type, ...conn],
-                                         attrs: [before.attrs, ...conn.map(() => null)]})
-    tr.join(end)
-    tr.join(cut)
-    if (tr.apply(andScroll) !== false) return
-  }
-
-  let selAfter = findSelectionFrom(pm.doc, cut, 1)
-  return pm.tr.lift(selAfter.from, selAfter.to).apply(andScroll)
-}
 
 function selectClickedNode(pm, e) {
   let pos = selectableNodeAbove(pm, e.target, {left: e.clientX, top: e.clientY}, true)

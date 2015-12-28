@@ -3,6 +3,12 @@ import {SchemaSpec, Schema, defaultSchema} from "../../../prosemirror/dist/model
 
 export class Input extends Inline {}
 
+Input.attributes = {
+		name: new Attribute(),
+		type: new Attribute({default: "checkbox"}),
+		value: new Attribute(),
+	}
+
 export class Checkbox extends Input {}
 
 Checkbox.attributes = {

@@ -1,4 +1,4 @@
-import {InlineMath, BlockMath, IFrame} from "./schema"
+import {InlineMath, BlockMath, IFrame, Spreadsheet} from "./schema"
 import {elt} from "../../../prosemirror/dist/dom"
 
 MathJax.Hub.Queue(function () {
@@ -46,3 +46,29 @@ IFrame.prototype.serializeDOM = node => {
 		})
 	return dom;
 }
+
+Spreadsheet.prototype.serializeDOM = node => {
+	console.log("serial hot")
+	if (node.rendered) {
+		node.rendered = node.rendered.cloneNode(true)
+	} else {
+		node.rendered = elt("div", {id: "spreadsheet", class: "spreadsheet", width:node.attrs.width, height: node.attrs.height});
+/*		var data = [
+		            ["", "Ford", "Volvo", "Toyota", "Honda"],
+		            ["2014", 10, 11, 12, 13],
+		            ["2015", 20, 11, 14, 13],
+		            ["2016", 30, 15, 12, 13]
+		          ];
+
+        var container = document.getElementById('spreadsheet');
+        var hot = new Handsontable(container, {
+        	data: data,
+        	minSpareRows: 1,
+        	rowHeaders: true,
+        	colHeaders: true,
+        	contextMenu: true
+      })
+ */   }
+	return node.rendered; 
+} 
+

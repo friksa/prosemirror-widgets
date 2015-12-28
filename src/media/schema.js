@@ -25,8 +25,17 @@ BlockMath.attributes = {
 	tex: new Attribute({default: ""})
 }
 
+export class Spreadsheet extends Block {}
+
+Spreadsheet.attributes = {
+	data: new Attribute(),
+	width: new Attribute({default: defW}),
+	height: new Attribute({default: defH})
+}
+
 export const mediaSpec = new SchemaSpec({
 	inlinemath: InlineMath,
 	blockmath: BlockMath,
-	iframe: IFrame
+	iframe: IFrame,
+	spreadsheet: Spreadsheet
 })

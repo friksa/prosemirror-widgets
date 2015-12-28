@@ -1,41 +1,52 @@
 import {ProseMirror} from "../../prosemirror/dist/edit"
-import {Schema, defaultSchema, Textblock} from "../../prosemirror/dist/model"
-import {readParams} from "../../prosemirror/dist/menu/menu"
+import {insertCSS} from "../../prosemirror/dist/dom"
 import "../../prosemirror/dist/menu/tooltipmenu"
 import "../../prosemirror/dist/menu/menubar"
 import "../../prosemirror/dist/inputrules/autoinput"
 
-import {Textfield, Textarea, Checkbox, Select, MultipleChoice, Scale, Checklist, formSpec} from "./forms"
-import {IFrame, InlineMath, BlockMath, mediaSpec} from "./media"
-import {elt, insertCSS} from "../../prosemirror/dist/dom"
+import {Doc, Textblock, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule,
+		Paragraph, Heading, CodeBlock, Text, Image, HardBreak,
+		EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../prosemirror/dist/model"
 
-const widgets = ["Textfield", "Textarea", "Checkbox", "Select", "IFrame", "InlineMath", "BlockMath", "MultipleChoice", "Scale", "Checklist"]
-                 
-class Widget extends Textblock {}
- 
-const insertWidget = widgets.map(w => ({
-	value: "insert"+w,
-	display: () => { return elt("span",null, w)}
-}))
+import {Input, TextField, TextArea, CheckBox, RadioButton, Select, 
+		IFrame, InlineMath, BlockMath, 
+		Choice, MultipleChoice, Scale, CheckItem, CheckList} from "./widgets"
 
-Widget.register("command", {
-	name: "insertWidget",
-	label: "Insert...",
-	select(pm) { return true},
-	params: [
-	     {name: "Widget type", type: "select", options: insertWidget, defaultLabel: "Insert..."}
-	],
-	run(pm, type) {
-		let menu = pm.mod.menuBar.menu
-		let cmd = pm.commands[type]
-		if (menu && cmd) menu.enter(readParams(cmd))
-	},
-	display: "select",
-	menuGroup: "block",
-	menuRank: 99
+const widgetsSpec = new SchemaSpec({
+	doc: Doc,
+	blockquote: BlockQuote,
+	ordered_list: OrderedList,
+	bullet_list: BulletList,
+	list_item: ListItem,
+	horizontal_rule: HorizontalRule,
+
+	paragraph: Paragraph,
+	heading: Heading,
+	code_block: CodeBlock,
+
+	text: Text,
+	image: Image,
+	hard_break: HardBreak,
+	
+	input: Input,
+	textfield: TextField,
+	textarea: TextArea,
+	checkbox: CheckBox,
+	radiobutton: RadioButton,
+	select: Select,	
+	choice: Choice,
+	multiplechoice: MultipleChoice,
+	scale: Scale,
+	checkitem: CheckItem,
+	checklist: CheckList
+}, {
+	em: EmMark,
+	strong: StrongMark,
+	link: LinkMark,
+	code: CodeMark
 })
 
-const widgetSchema = new Schema(defaultSchema.spec.update(formSpec.nodes).update(mediaSpec.nodes).update({Widget}))
+const widgetSchema = new Schema(widgetsSpec)
 
 let pm = window.pm = new ProseMirror({
   place: document.querySelector("#editor"),

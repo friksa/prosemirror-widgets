@@ -1,4 +1,4 @@
-import {InlineMath, BlockMath, IFrame} from "./schema"
+import {InlineMath, BlockMath, IFrame, Spreadsheet} from "./schema"
 import {readParams} from "../../../prosemirror/dist/menu/menu"
 import {Pos} from "../../../prosemirror/dist/model"
 import {selectableNodeAbove} from "../../../prosemirror/dist/edit/selection"
@@ -56,6 +56,25 @@ IFrame.register("command", {
     }
 })
 
+Spreadsheet.register("command", {
+	name: "insertSpreadsheet",
+	label: "Spreadsheet",
+	run(pm, data, width, height) {
+	console.log("create")
+    	return pm.tr.replaceSelection(this.create({data, width, height})).apply()
+  	},
+	params: [
+     	{ label: "Link to data", type: "text"},
+     	{ label: "Width in pixels", type: "text", default: defW },
+     	{ label: "Height in pixels", type: "text", default: defH },
+	],
+  	prefillParams(pm) {
+      let {node} = pm.selection
+      if (node)
+        return [node.attrs.data, node.attrs.width, node.attrs.height]
+    }
+})
+
 function selectClickedNode(pm, e) {
   let pos = selectableNodeAbove(pm, e.target, {left: e.clientX, top: e.clientY}, true)
   if (!pos) return pm.sel.pollForUpdate()
@@ -87,3 +106,4 @@ function defParamsClick(type) {
 defParamsClick(InlineMath)
 defParamsClick(BlockMath)
 defParamsClick(IFrame)
+defParamsClick(Spreadsheet)
