@@ -1,6 +1,6 @@
 import {Block, Paragraph, Attribute} from "../../../prosemirror/dist/model"
 import {elt, insertCSS} from "../../../prosemirror/dist/dom"
-import {defParser} from "../utils"
+import {defParser, defParamsClick, andScroll} from "../utils"
 
 export class CheckItem extends Paragraph {
 	static get kind() { return "." }
@@ -15,8 +15,8 @@ CheckList.attributes = {
 	layout: new Attribute({default: "vertical"})
 }
 
-defParser(Checkitem,"div","widgets-checkitem")
-defParser(Checklist,"div","widgets-checklist")
+defParser(CheckItem,"div","widgets-checkitem")
+defParser(CheckList,"div","widgets-checklist")
 
 CheckItem.prototype.serializeDOM = node => {
 	let name = node.attrs.name
@@ -53,8 +53,8 @@ CheckItem.register("command", {
 
 
 CheckList.register("command", {
-	name: "insertChecklist",
-	label: "Checklist",
+	name: "insertCheckList",
+	label: "CheckList",
 	run(pm, name, direction) {
 		let checkitemType = pm.schema.nodes["checkitem"]
 		let chkitem = checkitemType.create({name})                                    

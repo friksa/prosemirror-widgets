@@ -1,6 +1,6 @@
-import {Block, Attribute} from "../../../prosemirror/dist/model"
-import {insertCSS} from "../../../prosemirror/dist/dom"
-import {defParser} from "../utils"
+import {Block, Inline, Attribute} from "../../../prosemirror/dist/model"
+import {elt, insertCSS} from "../../../prosemirror/dist/dom"
+import {defParser, defParamsClick, andScroll} from "../utils"
 
 export class Select extends Inline {}
 
@@ -14,7 +14,7 @@ defParser(Select,"select","widgets-select")
 
 Select.prototype.serializeDOM = node => {
 	let selection = node.attrs.multiple == "multiple"
-	let select = elt("select",{id: node.attrs.name, class: "widgets-select", size: 1, multiple: selection})
+	let select = elt("select",{name: node.attrs.name, class: "widgets-select", size: 1, multiple: selection})
 	node.attrs.options.split(",").map(function(option) {
 		select.appendChild(elt("option", {value: option.trim()}, option))
 	})
@@ -38,11 +38,13 @@ Select.register("command", {
     prefillParams(pm) {
 	    let {node} = pm.selection
 	    if (node) {
-	    	console.log(node.attrs.multiple)
 	      return [node.attrs.name, node.attrs.options, node.attrs.multiple]
 	    }
 	 }
 })
+
+defParamsClick(Select)
+
 insertCSS(`
 
 .widgets-select {}

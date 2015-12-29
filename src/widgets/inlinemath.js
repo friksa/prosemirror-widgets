@@ -1,6 +1,6 @@
 import {Inline, Attribute} from "../../../prosemirror/dist/model"
 import {elt, insertCSS} from "../../../prosemirror/dist/dom"
-import {defParser} from "../utils"
+import {defParser, defParamsClick, andScroll} from "../utils"
 
 export class InlineMath extends Inline {}
 
@@ -8,7 +8,7 @@ InlineMath.attributes = {
 	tex: new Attribute({default: ""})
 } 
 
-defParser("span", "widgets-inlinemath")
+defParser(InlineMath, "span", "widgets-inlinemath")
 
 InlineMath.prototype.serializeDOM = node => {
 	if (node.rendered) {
@@ -26,7 +26,7 @@ InlineMath.register("command", {
 	name: "insertInlineMath",
 	label: "InlineMath",
 	run(pm, tex) {
-    	return pm.tr.replaceSelection(this.create({tex})).apply()
+    	return pm.tr.replaceSelection(this.create({tex})).apply(andScroll)
   	},
 	params: [
      	{ label: "Latex Expression", type: "text" }
@@ -37,6 +37,8 @@ InlineMath.register("command", {
         return [node.attrs.tex]
     }
 })
+
+defParamsClick(InlineMath)
 
 insertCSS(`
 

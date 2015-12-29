@@ -1,6 +1,6 @@
 import {Block, Attribute} from "../../../prosemirror/dist/model"
 import {elt,insertCSS} from "../../../prosemirror/dist/dom"
-import {defParser} from "../utils"
+import {defParser, defParamsClick, andScroll} from "../utils"
 
 export class BlockMath extends Block {}
 
@@ -25,7 +25,7 @@ BlockMath.register("command", {
 	name: "insertBlockMath",
 	label: "BlockMath",
 	run(pm, tex) {
-    	return pm.tr.replaceSelection(this.create({tex})).apply()
+    	return pm.tr.replaceSelection(this.create({tex})).apply(andScroll)
   	},
 	params: [
      	{ label: "Latex Expression", type: "text"}
@@ -36,6 +36,8 @@ BlockMath.register("command", {
         return [node.attrs.tex]
     }
 })
+
+defParamsClick(BlockMath)
 
 insertCSS(`
 

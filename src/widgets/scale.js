@@ -1,6 +1,6 @@
 import {Block, Attribute} from "../../../prosemirror/dist/model"
 import {elt, insertCSS} from "../../../prosemirror/dist/dom"
-import {defParser} from "../utils"
+import {defParser, defParamsClick, andScroll} from "../utils"
 
 export class Scale extends Block {}
 
@@ -60,6 +60,8 @@ Scale.register("command",{
 	      return [node.attrs.name, node.attrs.startvalue, node.attrs.startlabel, node.attrs.endvalue, node.attrs.endlabel]
 	 }
 })
+
+defParamsClick(Scale)
 
 insertCSS(`
 

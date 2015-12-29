@@ -3,14 +3,15 @@ import {insertCSS} from "../../prosemirror/dist/dom"
 import "../../prosemirror/dist/menu/tooltipmenu"
 import "../../prosemirror/dist/menu/menubar"
 import "../../prosemirror/dist/inputrules/autoinput"
-
+  
 import {Doc, Textblock, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule,
-		Paragraph, Heading, CodeBlock, Text, Image, HardBreak,
-		EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../prosemirror/dist/model"
+	Paragraph, Heading, CodeBlock, Text, Image, HardBreak,
+	EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../prosemirror/dist/model"
 
 import {Input, TextField, TextArea, CheckBox, RadioButton, Select, 
-		IFrame, InlineMath, BlockMath, 
-		Choice, MultipleChoice, Scale, CheckItem, CheckList} from "./widgets"
+	IFrame, InlineMath, BlockMath, 
+	Choice, MultipleChoice, Scale, CheckItem, CheckList, Widget} from "./widgets"
+
 
 const widgetsSpec = new SchemaSpec({
 	doc: Doc,
@@ -33,12 +34,16 @@ const widgetsSpec = new SchemaSpec({
 	textarea: TextArea,
 	checkbox: CheckBox,
 	radiobutton: RadioButton,
-	select: Select,	
+	select: Select,
+	inlinemath: InlineMath,
+	blockmath: BlockMath,
+	iframe: IFrame,
 	choice: Choice,
 	multiplechoice: MultipleChoice,
 	scale: Scale,
 	checkitem: CheckItem,
-	checklist: CheckList
+	checklist: CheckList,
+	widget: Widget
 }, {
 	em: EmMark,
 	strong: StrongMark,

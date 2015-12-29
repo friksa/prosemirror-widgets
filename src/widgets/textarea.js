@@ -1,13 +1,14 @@
 import {Block, Attribute} from "../../../prosemirror/dist/model"
 import {insertCSS} from "../../../prosemirror/dist/dom"
-import {defParser} from "../utils"
+import {defParser, defParamsClick, andScroll} from "../utils"
 
 export class TextArea extends Block {}
 
 TextArea.attributes = {
 	name: new Attribute(),
 	rows: new Attribute(),
-	cols: new Attribute()
+	cols: new Attribute(),
+	class: new Attribute({default: "widgets-textarea"})
 }
 
 defParser(TextArea,"input","widgets-textarea")
@@ -15,8 +16,8 @@ defParser(TextArea,"input","widgets-textarea")
 TextArea.prototype.serializeDOM = (node,s) => s.renderAs(node,"textarea",node.attrs)
 
 TextArea.register("command", {
-	name: "insertTextarea",
-	label: "Textarea",
+	name: "insertTextArea",
+	label: "TextArea",
 	run(pm, name, rows, cols) {
     	return pm.tr.replaceSelection(this.create({name,rows,cols})).apply(andScroll)
   	},
@@ -30,9 +31,12 @@ TextArea.register("command", {
 	    if (node)
 	      return [node.attrs.name, node.attrs.rows, node.attrs.cols]
 	 }
-})  
+}) 
+
+defParamsClick(TextArea)
+
 insertCSS(`
 
-.textarea {}
+.widgets-textarea {}
 
 `)

@@ -1,14 +1,15 @@
 import {Attribute} from "../../../prosemirror/dist/model"
 import {insertCSS} from "../../../prosemirror/dist/dom"
-import {input} from "input"
-import {defParser} from "../utils"
+import {Input} from "./input"
+import {defParser, defParamsClick, andScroll} from "../utils"
 
 export class TextField extends Input {}
 
 TextField.attributes = {
 	name: new Attribute(),
 	type: new Attribute({default: "text"}),
-	size: new Attribute({default: "20"})
+	size: new Attribute({default: "20"}),
+	class: new Attribute({default: "widgets-textfield"})
 }
 
 defParser(TextField,"input","widgets-textfield")
@@ -16,8 +17,8 @@ defParser(TextField,"input","widgets-textfield")
 // serializer inherits from input
 
 TextField.register("command", {
-	name: "insertTextfield",
-	label: "Textfield",
+	name: "insertTextField",
+	label: "TextField",
 	run(pm, name, size) {
     	return pm.tr.replaceSelection(this.create({name,size})).apply(andScroll)
   	},
@@ -31,6 +32,8 @@ TextField.register("command", {
 	      return [node.attrs.name, node.attrs.size ]
 	 }
 })
+
+defParamsClick(TextField)
 
 insertCSS(`
 

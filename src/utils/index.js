@@ -2,6 +2,8 @@ import {readParams} from "../../../prosemirror/dist/menu/menu"
 import {Pos} from "../../../prosemirror/dist/model"
 import {selectableNodeAbove} from "../../../prosemirror/dist/edit/selection"
 
+export const andScroll = {scrollIntoView: true}
+
 MathJax.Hub.Queue(function () {
     MathJax.Hub.Config({
     	tex2jax: {

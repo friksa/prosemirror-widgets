@@ -1,6 +1,6 @@
 import {Block, Paragraph, Attribute} from "../../../prosemirror/dist/model"
 import {insertCSS} from "../../../prosemirror/dist/dom"
-import {defParser} from "../utils"
+import {defParser, andScroll} from "../utils"
 
 export class Choice extends Paragraph {
 	static get kind() { return "." }

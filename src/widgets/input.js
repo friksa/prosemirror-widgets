@@ -12,7 +12,7 @@ Input.attributes = {
 
 defParser(Input,"widgets-input")
 
-Input.prototype.serializeDOM = (node,s) => s.renderAs(node,"widgets-input",node.attrs)
+Input.prototype.serializeDOM = (node,s) => s.renderAs(node,"input",node.attrs)
 
 insertCSS(`
 		

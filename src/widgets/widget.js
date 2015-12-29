@@ -1,13 +1,15 @@
-import {Textblock} from from "../../prosemirror/dist/model"
+import {readParams} from "../../../prosemirror/dist/menu/menu"
+import {Textblock} from "../../../prosemirror/dist/model"
+import {elt} from "../../../prosemirror/dist/dom"
 
 const widgets = ["TextField", "TextArea", "CheckBox", "Select", "IFrame", "InlineMath", "BlockMath", "MultipleChoice", "Scale", "CheckList"]
 
-const insertWidget = widgets.map(w => ({
-	value: "insert"+w,
-	display: () => { return elt("span",null, w)}
-}))
- 
-class Widget extends Textblock {}
+ const insertWidget = widgets.map(w => ({
+ 	value: "insert"+w,
+ 	display: () => { return elt("span",null, w)}
+ }))
+
+export class Widget extends Textblock {}
  
 Widget.register("command", {
 	name: "insertWidget",
@@ -26,3 +28,4 @@ Widget.register("command", {
 	menuRank: 99
 })
 
+ 
