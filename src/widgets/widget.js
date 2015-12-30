@@ -2,7 +2,9 @@ import {readParams} from "../../../prosemirror/dist/menu/menu"
 import {Textblock} from "../../../prosemirror/dist/model"
 import {elt} from "../../../prosemirror/dist/dom"
 
-const widgets = ["TextField", "TextArea", "CheckBox", "Select", "IFrame", "InlineMath", "BlockMath", "MultipleChoice", "Scale", "CheckList"]
+const widgets = ["Image", "TextField", "TextArea", "CheckBox", "Select", 
+                 "IFrame", "InlineMath", "BlockMath", "SpreadSheet",
+                 "MultipleChoice", "Scale", "CheckList"]
 
  const insertWidget = widgets.map(w => ({
  	value: "insert"+w,

@@ -5,11 +5,11 @@ import "../../prosemirror/dist/menu/menubar"
 import "../../prosemirror/dist/inputrules/autoinput"
   
 import {Doc, Textblock, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule,
-	Paragraph, Heading, CodeBlock, Text, Image, HardBreak,
+	Paragraph, Heading, Text, HardBreak,
 	EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../prosemirror/dist/model"
 
 import {Input, TextField, TextArea, CheckBox, RadioButton, Select, 
-	IFrame, InlineMath, BlockMath, 
+	IFrame, InlineMath, BlockMath, Image, SpreadSheet,
 	Choice, MultipleChoice, Scale, CheckItem, CheckList, Widget} from "./widgets"
 
 
@@ -23,7 +23,6 @@ const widgetsSpec = new SchemaSpec({
 
 	paragraph: Paragraph,
 	heading: Heading,
-	code_block: CodeBlock,
 
 	text: Text,
 	image: Image,
@@ -43,6 +42,7 @@ const widgetsSpec = new SchemaSpec({
 	scale: Scale,
 	checkitem: CheckItem,
 	checklist: CheckList,
+	spreadsheet: SpreadSheet,
 	widget: Widget
 }, {
 	em: EmMark,
