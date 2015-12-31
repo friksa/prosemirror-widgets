@@ -1,5 +1,5 @@
-import {Block, Attribute} from "../../../prosemirror/dist/model"
-import {elt, insertCSS} from "../../../prosemirror/dist/dom"
+import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
+import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll} from "../utils"
 
 export class Scale extends Block {}

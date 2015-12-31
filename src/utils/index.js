@@ -1,6 +1,6 @@
-import {readParams} from "../../../prosemirror/dist/menu/menu"
-import {Pos} from "../../../prosemirror/dist/model"
-import {selectableNodeAbove} from "../../../prosemirror/dist/edit/selection"
+import {readParams} from "../../../../git/prosemirror/dist/menu/menu"
+import {Pos} from "../../../../git/prosemirror/dist/model"
+import {selectableNodeAbove} from "../../../../git/prosemirror/dist/edit/selection"
 
 export const andScroll = {scrollIntoView: true}
 

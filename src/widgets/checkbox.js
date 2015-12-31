@@ -1,5 +1,5 @@
-import {Attribute} from "../../../prosemirror/dist/model"
-import {insertCSS} from "../../../prosemirror/dist/dom"
+import {Attribute} from "../../../../git/prosemirror/dist/model"
+import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {Input} from "./input"
 import {defParser, defParamsClick, andScroll} from "../utils"
 

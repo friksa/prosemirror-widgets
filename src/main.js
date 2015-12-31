@@ -1,15 +1,15 @@
-import {ProseMirror} from "../../prosemirror/dist/edit"
-import {insertCSS} from "../../prosemirror/dist/dom"
-import "../../prosemirror/dist/menu/tooltipmenu"
-import "../../prosemirror/dist/menu/menubar"
-import "../../prosemirror/dist/inputrules/autoinput"
-  
+import {ProseMirror} from "../../../git/prosemirror/dist/edit"
+import {insertCSS} from "../../../git/prosemirror/dist/dom"
+import "../../../git/prosemirror/dist/menu/tooltipmenu"
+import "../../../git/prosemirror/dist/menu/menubar"
+import "../../../git/prosemirror/dist/inputrules/autoinput"
+   
 import {Doc, Textblock, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule,
 	Paragraph, Heading, Text, HardBreak,
-	EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../prosemirror/dist/model"
+	EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../../git/prosemirror/dist/model"
 
 import {Input, TextField, TextArea, CheckBox, RadioButton, Select, 
-	IFrame, InlineMath, BlockMath, Image, SpreadSheet,
+	IFrame, InlineMath, BlockMath, Image, SpreadSheet,CarryForward,
 	Choice, MultipleChoice, Scale, CheckItem, CheckList, Widget} from "./widgets"
 
 
@@ -37,6 +37,7 @@ const widgetsSpec = new SchemaSpec({
 	inlinemath: InlineMath,
 	blockmath: BlockMath,
 	iframe: IFrame,
+	carryforward: CarryForward,
 	choice: Choice,
 	multiplechoice: MultipleChoice,
 	scale: Scale,

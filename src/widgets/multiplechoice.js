@@ -1,5 +1,5 @@
-import {Block, Paragraph, Attribute, Pos} from "../../../prosemirror/dist/model"
-import {insertCSS} from "../../../prosemirror/dist/dom"
+import {Block, Paragraph, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
+import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, andScroll} from "../utils"
 
 export class Choice extends Paragraph {

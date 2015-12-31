@@ -1,8 +1,8 @@
-import {readParams} from "../../../prosemirror/dist/menu/menu"
-import {Textblock} from "../../../prosemirror/dist/model"
-import {elt} from "../../../prosemirror/dist/dom"
+import {readParams} from "../../../../git/prosemirror/dist/menu/menu"
+import {Textblock} from "../../../../git/prosemirror/dist/model"
+import {elt} from "../../../../git/prosemirror/dist/dom"
 
-const widgets = ["Image", "TextField", "TextArea", "CheckBox", "Select", 
+const widgets = ["Image", "TextField", "TextArea", "CheckBox", "Select", "CarryForward",
                  "IFrame", "InlineMath", "BlockMath", "SpreadSheet",
                  "MultipleChoice", "Scale", "CheckList"]
 
