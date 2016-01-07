@@ -2,7 +2,6 @@ import {Block, Textblock, Paragraph, Text, Attribute, Pos} from "../../../../git
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {findSelectionNear} from "../../../../git/prosemirror/dist/edit/selection"
 import {defParser, andScroll, namePattern} from "../utils"
-import {defineCommand} from "../../../../git/prosemirror/dist/edit"
 
 export class Choice extends Paragraph {
 	static get kind() { return "." }

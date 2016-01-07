@@ -1,4 +1,5 @@
 import {elt,insertCSS} from "../../../../git/prosemirror/dist/dom"
+import {defineParamHandler} from "../../../../git/prosemirror/dist/edit"
 
 const inputTypes = ["text","number","range","email","url","date"]
                     
