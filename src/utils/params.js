@@ -2,6 +2,10 @@ import {elt,insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defineParamHandler} from "../../../../git/prosemirror/dist/edit"
 
 const inputTypes = ["text","number","range","email","url","date"]
+
+let fhandler = null
+
+export function defineFileHandler(handler) { fhandler = handler}
                     
 function paramDefault(param, pm, command) {
 	return !param.default ? ""
@@ -135,6 +139,7 @@ function buildUploadForm(pm, field) {
 		FileDragHover(e);
 		let files = e.target.files || e.dataTransfer.files;
 		if (files) field.value = files[0].name
+		if (fhandler) fhandler(files)
 		pm.wrapper.removeChild(form)
 	}
 	fileselect.addEventListener("change", saveFile)

@@ -12,14 +12,14 @@ export class Image extends Inline {
 		}
 	}
 }
-
+ 
 defParser(Image, "img", "widgets-img")
 
 Image.prototype.serializeDOM = (node, s) => s.renderAs(node, "img", node.attrs)
 
 Image.register("command", {
   name: "insertImage",
-  label: "Insert image",
+  label: "Image",
   run(pm, src, alt, title) {
     return pm.tr.replaceSelection(this.create({src, title, alt})).apply(andScroll)
   },

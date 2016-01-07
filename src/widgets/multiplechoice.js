@@ -13,7 +13,7 @@ export class Choice extends Paragraph {
 	}
 
 	create(attrs, content, marks) {
-		if (attrs.value > 0) content = [this.schema.node("radiobutton",attrs," ")]
+		if (attrs.value > 0) content = [this.schema.node("radiobutton",attrs),this.schema.node("paragraph")]
 		return super.create(attrs, content, marks)
 	}
 }

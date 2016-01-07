@@ -3,7 +3,7 @@ import {insertCSS} from "../../../git/prosemirror/dist/dom"
 import "../../../git/prosemirror/dist/menu/tooltipmenu"
 import "../../../git/prosemirror/dist/menu/menubar"
 import "../../../git/prosemirror/dist/inputrules/autoinput"
-import {widgetParamHandler} from "./utils"
+import {widgetParamHandler, defineFileHandler} from "./utils"
  
 import {Doc, Textblock, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule,
 	Paragraph, Heading, Text, HardBreak,
@@ -65,6 +65,10 @@ let pm = window.pm = new ProseMirror({
   autoInput: true
 })
 
+defineFileHandler(function(files) {
+	console.log(files)
+})
+
 insertCSS(`
 		
 .ProseMirror {
@@ -87,16 +91,15 @@ div.ProseMirror-select-menu div {
 
 div.ProseMirror-select-menu div:hover {
   background: #D6F2F8;
+  color: #0191C8;
 }
 
 div.ProseMirror-menubar-inner {
   background: linear-gradient(to bottom, white, #0191C8);
-	//background: #D6F2F8;
 }
 
 div.ProseMirror-menu form {
-	background: linear-gradient(to bottom, white, #0191C8);
-	//background: #D6F2F8;
+	background: linear-gradient(to bottom, white, #0191C8);	//background: #D6F2F8;
 	width: 300px;
 }
 
@@ -109,7 +112,7 @@ div.ProseMirror-menu input[type = "text"] {
 	background: white;
 }
 
-div.ProseMirror-menubar-sliding {
+/*div.ProseMirror-menubar-sliding {
   -webkit-transition: right 0.2s ease-in;
   -moz-transition: right 0.2s ease-in;
   transition: right 0.2s ease-in;
@@ -120,7 +123,7 @@ div.ProseMirror-menubar-sliding {
   box-sizing: border-box;
   padding-left: 16px;
   background: #D6F2F8;
-}
+}*/
 
 
 `)
