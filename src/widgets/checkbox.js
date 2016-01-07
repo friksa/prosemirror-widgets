@@ -14,7 +14,6 @@ export class CheckBox extends Input {
 	}
 }
 
-CheckBox.attributes = 
 defParser(CheckBox,"input","widgets-checkbox")
 
 CheckBox.register("command", {

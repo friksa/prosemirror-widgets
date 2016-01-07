@@ -4,7 +4,7 @@ import "../../../git/prosemirror/dist/menu/tooltipmenu"
 import "../../../git/prosemirror/dist/menu/menubar"
 import "../../../git/prosemirror/dist/inputrules/autoinput"
 import {widgetParamHandler} from "./utils"
-
+ 
 import {Doc, Textblock, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule,
 	Paragraph, Heading, Text, HardBreak,
 	EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../../git/prosemirror/dist/model"

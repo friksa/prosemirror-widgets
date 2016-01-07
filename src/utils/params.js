@@ -17,19 +17,27 @@ function buildParamFields(pm, command) {
 		let fname = param.name? param.name: param.label
 		let opt = param.options ? param.options: {}
 		if (inputTypes.indexOf(param.type) >= 0) {
-			field = elt("input", {name, id: name, type: param.type,
-		                        placeholder: param.label,
-		                        value: val,
-		                        autocomplete: "off",
-		                        required: true})
+			field = elt("input", {
+				name, 
+				id: name, 
+				type: param.type,
+		        placeholder: param.label,
+		        value: val,
+		        autocomplete: "off",
+		        required: true}
+			)
 			for (let prop in opt) field.setAttribute(prop, opt[prop])
 		} else if (param.type == "file") {
-			field = elt("input", {name, id: name, type: "text",
-				  readonly: true,
-                  placeholder: param.label,
-                  value: val,
-                  autocomplete: "off",
-                  required: true})
+			field = elt("input", {
+				name, 
+				id: name, 
+				type: "text",
+				readonly: true,
+                placeholder: param.label,
+                value: val,
+                autocomplete: "off",
+                required: true}
+			)
 			for (let prop in opt) field.setAttribute(prop, opt[prop])
 		} else if (param.type == "select")
 		  field = elt("select", {name}, (param.options.call ? param.options(pm) : param.options)
@@ -39,10 +47,7 @@ function buildParamFields(pm, command) {
 		let fieldLabel = elt("label",{for: name},fname)
 		if (param.type == "file") {
 			let uploadButton = elt("span",{class: "widgetUpload"},"Upload")
-			let upload = () => {
-				alert("Show Drag and Drop/Browse File Dialog")
-			}
-			uploadButton.addEventListener("click",upload)
+			uploadButton.addEventListener("click",e => { buildUploadForm(pm, field) })
 			return elt("div", {class: "widgetField"}, fieldLabel, field, uploadButton)
 		} else
 			return elt("div", {class: "widgetField"}, fieldLabel, field)
@@ -66,25 +71,35 @@ function gatherParams(pm, command, form) {
 }
 
 function paramDialog(pm, command, callback) {
-	let dialog, finish = result => {
-		if (!result) return;
-		pm.wrapper.removeChild(dialog)
-		pm.focus()
-	    callback(result)
+	let dialog, form, finish = e => {
+    	e.preventDefault(); e.stopPropagation()
+    	let params = gatherParams(pm, command, form)
+		if (params) {
+			pm.wrapper.removeChild(dialog)
+			pm.focus()
+			callback(params)
+		}
 	} 
 	let fields = buildParamFields(pm, command)
 	let save = elt("input",{name: "save", type: "submit", value: "Save"})
-    save.addEventListener("mousedown", e => {
-    	e.preventDefault(); e.stopPropagation()
-    	finish(gatherParams(pm, command, form))
-    })
+    save.addEventListener("mousedown", e => { finish(e) })
 	let cancel = elt("input",{name: "cancel", type: "button", value: "Cancel"})
     cancel.addEventListener("mousedown", e => {
+    	e.preventDefault(); e.stopPropagation()
 		pm.wrapper.removeChild(dialog)
 		pm.focus()
     })
 	let buttons = elt("div",{class: "widgetButtons"},save,cancel)
-	let form = elt("form", {class: "widgetForm"}, elt("h4",null,command.label+" Settings"),fields, buttons)
+	form = elt("form", {class: "widgetForm"}, elt("h4",null,command.label+" Settings"),fields, buttons)
+	// Treat Enter as a submit if form only has one field
+    form.addEventListener("keypress", e => {
+    	if (e.keyCode == 13) {
+    		if (fields.length == 1) finish(e)
+    		else {
+    			e.preventDefault(); e.stopPropagation()
+    		}
+    	}
+    })
 	dialog = elt("div",null,elt("div",{class: "widgetDialog"}),form)
 	
 	pm.wrapper.appendChild(dialog)
@@ -96,6 +111,51 @@ function paramDialog(pm, command, callback) {
 		let input = form.querySelector("input, textarea")
 		if (input) input.focus()
 	}, 20)
+}
+
+function FileDragHover(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	e.target.className = (e.type == "dragover" ? "hover" : "");
+}
+
+function buildUploadForm(pm, field) {
+	let legend = elt("legend", null, "HTML File Upload")
+	let inputHidden = elt("input",{type: "hidden", id: "MAX_FILE_SIZE", name: "MAX_FILE_SIZE", value:"300000"})
+	let label = elt("label", {for: "fileselect"},"Files to upload:")
+	let fileselect = elt("input",{id: "fileselect", type: "file", name: "fileselect[]", multiple: "multiple"})
+	let filedrag = elt("div",{id: "filedrag"},"or drop files here")
+	let cancel = elt("button",{type: "button"}, "Cancel")
+	cancel.addEventListener("click", e => { 
+    	e.preventDefault(); e.stopPropagation()
+		pm.wrapper.removeChild(form)
+	})
+	let saveFile = function(e) {
+    	e.preventDefault(); e.stopPropagation()
+		FileDragHover(e);
+		let files = e.target.files || e.dataTransfer.files;
+		if (files) field.value = files[0].name
+		pm.wrapper.removeChild(form)
+	}
+	fileselect.addEventListener("change", saveFile)
+	let xhr = new XMLHttpRequest()
+	if (xhr.upload) {
+		filedrag.addEventListener("dragover", FileDragHover)
+		filedrag.addEventListener("dragleave", FileDragHover)
+		filedrag.addEventListener("drop", saveFile)
+		filedrag.style.display = "block"
+	}
+	let form = elt("form",{id: "upload", enctype: "multipart/form-data"},
+		elt("fieldset", null, legend, inputHidden,
+			elt("div",null,
+				label,
+				fileselect,
+				filedrag
+			),
+			elt("div",null,cancel)
+		)
+	)
+	pm.wrapper.appendChild(form)
 }
 
 export function widgetParamHandler(pm, command, callback) {
@@ -184,4 +244,35 @@ insertCSS(`
 	border-radius: 4px;
 	padding: 2px;
 }
+
+#upload {
+	position: absolute;
+	top: 40px;
+	left: 40px;
+	padding: 5px;
+	border-radius: 6px;
+	background: #EEE;
+	z-index: 10000;
+	display: block;
+}
+
+#filedrag {
+	display: none;
+	font-weight: bold;
+	text-align: center;
+	padding: 1em 0;
+	margin: 1em 0;
+	color: #555;
+	border: 2px dashed #555;
+	border-radius: 7px;
+	cursor: default;
+}
+
+#filedrag:hover {
+	color: #f00;
+	border-color: #f00;
+	border-style: solid;
+	box-shadow: inset 0 3px 4px #888;
+}
+
 `)
