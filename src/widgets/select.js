@@ -1,13 +1,15 @@
 import {Block, Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
 
-export class Select extends Inline {}
-
-Select.attributes = {
-	name: new Attribute(),
-	options: new Attribute(),
-    multiple: new Attribute({default: "single"})
+export class Select extends Inline {
+	get attrs() {
+		return {
+			name: new Attribute,
+			options: new Attribute,
+		    multiple: new Attribute({default: "single"})
+		}
+	}
 }
 
 defParser(Select,"select","widgets-select")
@@ -28,9 +30,9 @@ Select.register("command", {
     	return pm.tr.replaceSelection(this.create({name,options,multiple})).apply(andScroll)
   	},
 	params: [
-     	{ label: "Name", type: "text"},
-      	{ label: "Options (comma separated)", type: "text"},
-     	{ label: "Selection (single or multiple)", type: "select", options: [
+	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 8}},
+      	{ name: "Options", label: "comma separated names", type: "text"},
+     	{ name: "Selection", label: "Selection (single or multiple)", type: "select", options: [
      	    {value: "multiple", label:"multiple"},
      	    {value: "single", label:"single"}
      	]}
@@ -43,7 +45,7 @@ Select.register("command", {
 	 }
 })
 
-defParamsClick(Select)
+defParamsClick(Select,"schema:select:insertSelect")
 
 insertCSS(`
 

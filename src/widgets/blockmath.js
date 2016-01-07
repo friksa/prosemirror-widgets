@@ -2,10 +2,12 @@ import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt,insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll} from "../utils"
  
-export class BlockMath extends Block {}
-
-BlockMath.attributes = {
-	tex: new Attribute({default: ""})
+export class BlockMath extends Block {
+	get attrs() {
+		return {
+			tex: new Attribute({default: ""})
+		}
+	}
 }
 
 defParser(BlockMath,"div","widgets-blockmath")
@@ -28,7 +30,7 @@ BlockMath.register("command", {
     	return pm.tr.replaceSelection(this.create({tex})).apply(andScroll)
   	},
 	params: [
-     	{ label: "Latex Expression", type: "text"}
+     	{ name: "Latex", label: "Latex Expression", type: "text"}
 	],
     prefillParams(pm) {
       let {node} = pm.selection
@@ -37,7 +39,7 @@ BlockMath.register("command", {
     }
 })
 
-defParamsClick(BlockMath)
+defParamsClick(BlockMath,"schema:blockmath:insertBlockMath")
 
 insertCSS(`
 

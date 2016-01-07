@@ -3,7 +3,8 @@ import {insertCSS} from "../../../git/prosemirror/dist/dom"
 import "../../../git/prosemirror/dist/menu/tooltipmenu"
 import "../../../git/prosemirror/dist/menu/menubar"
 import "../../../git/prosemirror/dist/inputrules/autoinput"
-   
+import {widgetParamHandler} from "./utils"
+
 import {Doc, Textblock, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule,
 	Paragraph, Heading, Text, HardBreak,
 	EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../../git/prosemirror/dist/model"
@@ -60,15 +61,21 @@ let pm = window.pm = new ProseMirror({
   doc: document.querySelector("#content").innerHTML,
   docFormat: "html",
   schema: widgetSchema,
+  commandParamHandler: "widgetParamHandler",
   autoInput: true
 })
 
 insertCSS(`
 		
+.ProseMirror {
+	width: 800px;
+	height: 200px;
+}
+
 div.ProseMirror-select-menu {
   position: absolute;
-  background: #EEE;
-  color: black;
+  background: #0191C8;
+  color: white;
   padding: 2px 2px;
   z-index: 15;
 }
@@ -79,30 +86,40 @@ div.ProseMirror-select-menu div {
 }
 
 div.ProseMirror-select-menu div:hover {
-  background: white;
+  background: #D6F2F8;
+}
+
+div.ProseMirror-menubar-inner {
+  background: linear-gradient(to bottom, white, #0191C8);
+	//background: #D6F2F8;
 }
 
 div.ProseMirror-menu form {
-	background: #EEE;
+	background: linear-gradient(to bottom, white, #0191C8);
+	//background: #D6F2F8;
 	width: 300px;
-	border: 1px solid #AAA
 }
 
 div.ProseMirror-menu form select {
+	width: 100px;
+	background: white;
+}
+
+div.ProseMirror-menu input[type = "text"] {
 	background: white;
 }
 
 div.ProseMirror-menubar-sliding {
-  -webkit-transition: right 0.2s ease-out;
-  -moz-transition: right 0.2s ease-out;
-  transition: right 0.2s ease-out;
+  -webkit-transition: right 0.2s ease-in;
+  -moz-transition: right 0.2s ease-in;
+  transition: right 0.2s ease-in;
   position: relative;
   left: 100%;
   width: 100%;
   box-sizing: -moz-border-box;
   box-sizing: border-box;
   padding-left: 16px;
-  background: white;
+  background: #D6F2F8;
 }
 
 

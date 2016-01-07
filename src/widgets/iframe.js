@@ -2,12 +2,14 @@ import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll} from "../utils"
 
-export class IFrame extends Block {}
-
-IFrame.attributes = {
-	src: new Attribute({default:""}),
-	width: new Attribute({default: 200}),
-	height: new Attribute({default: 200})
+export class IFrame extends Block {
+	get attrs() {
+		return {
+			src: new Attribute,
+			width: new Attribute({default: 200}),
+			height: new Attribute({default: 200})
+		}
+	}
 }
 
 defParser(IFrame, "iframe", "widgets-iframe")
@@ -24,14 +26,14 @@ IFrame.prototype.serializeDOM = (node, s) => s.renderAs(node, "iframe",{
 
 IFrame.register("command", {
 	name: "insertIFrame",
-	label: "show websites, youTube, GoogleMaps,...",
+	label: "IFrame",
 	run(pm, src, width, height) {
     	return pm.tr.replaceSelection(this.create({src, width, height})).apply(andScroll)
   	},
 	params: [
-     	{ label: "Link (website, youTube, Google Maps ...)", type: "text"},
-     	{ label: "Width in pixels", type: "text", default: 200 },
-     	{ label: "Height in pixels", type: "text", default: 200 },
+     	{ name: "URL", label: "Link to website, youTube, Google Maps ...", type: "url"},
+     	{ name: "Width", label: "Width in pixels", type: "number", default: 200, options: {min: 50, height:800}},
+     	{ name: "Height", label: "Height in pixels", type: "number", default: 200, options: {min: 50, height:800}},
 	],
   	prefillParams(pm) {
       let {node} = pm.selection
@@ -40,7 +42,7 @@ IFrame.register("command", {
     }
 })
 
-defParamsClick(IFrame)
+defParamsClick(IFrame,"schema:iframe:insertIFrame")
 
 insertCSS(`
 

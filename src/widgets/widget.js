@@ -1,6 +1,8 @@
 import {readParams} from "../../../../git/prosemirror/dist/menu/menu"
 import {Textblock} from "../../../../git/prosemirror/dist/model"
 import {elt} from "../../../../git/prosemirror/dist/dom"
+import {defineParamHandler} from "../../../../git/prosemirror/dist/edit"
+import {widgetParamHandler} from "../utils"
 
 const widgets = ["Image", "TextField", "TextArea", "CheckBox", "Select", "CarryForward",
                  "IFrame", "InlineMath", "BlockMath", "SpreadSheet",
@@ -10,24 +12,22 @@ const widgets = ["Image", "TextField", "TextArea", "CheckBox", "Select", "CarryF
  	value: "insert"+w,
  	display: () => { return elt("span",null, w)}
  }))
-
+ 
 export class Widget extends Textblock {}
  
 Widget.register("command", {
-	name: "insertWidget",
+	name: "widgetInsert",
 	label: "Insert...",
 	select(pm) {return true},
 	params: [
 	     {name: "Widget type", type: "select", options: insertWidget, defaultLabel: "Insert..."}
 	],
 	run(pm, type) {
-		let menu = pm.mod.menuBar.menu
-		let cmd = pm.commands[type]
-		if (menu && cmd) menu.enter(readParams(cmd))
+		if (!type.startsWith("insert")) return false
+		let tname = "schema:"+type.split("insert")[1].toLowerCase()+":"+type
+		let cmd = pm.commands[tname]
+		if (cmd) widgetParamHandler(pm,cmd)
 	},
-	display: "select",
-	menuGroup: "block",
-	menuRank: 99
+	display: { type: "param"},
+	menuGroup: "block(90)"
 })
-
- 

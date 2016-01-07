@@ -8,12 +8,14 @@ function getCarryOptions(names) {
 	return names.map(w => ({value: w, label: w}))
 }
  
-export class CarryForward extends Inline {}
-                             
-CarryForward.attributes = {
-	name: new Attribute()
+export class CarryForward extends Inline {
+	get attrs() {
+		return {
+			name: new Attribute
+		}
+	}
 }
-
+                             
 defParser(CarryForward,"thinkspace","widgets-carryforward")
 
 CarryForward.prototype.serializeDOM = node => {
@@ -29,10 +31,10 @@ CarryForward.register("command", {
     	return pm.tr.replaceSelection(this.create({name})).apply(andScroll)
   	},
 	params: [
-     	{ label: "Input name", type: "select", options: carryOptions }
+     	{ name: "Name", label: "Name of field", type: "select", options: carryOptions }
 	],
     prefillParams(pm) {
-  		pm.commands.insertCarryForward.spec.params[0].options = getCarryOptions(["test1","test2"])
+  		pm.commands["schema:carryforward:insertCarryForward"].spec.params[0].options = getCarryOptions(["test1","test2"])
 	    let {node} = pm.selection
 	    if (node) {
 	      return [node.attrs.name]
@@ -40,7 +42,7 @@ CarryForward.register("command", {
 	 }
 })
 
-defParamsClick(CarryForward)
+defParamsClick(CarryForward,"schema:carryforward:insertCarryForward")
 
 insertCSS(`
 

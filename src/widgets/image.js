@@ -2,12 +2,15 @@ import {Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt,insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll} from "../utils"
 
-export class Image extends Inline {}
-Image.attributes = {
-  src: new Attribute,
-  alt: new Attribute({default: ""}),
-  title: new Attribute({default: ""}),
-  class: new Attribute({default: "widgets-img"})
+export class Image extends Inline {
+	get attrs() {
+		return {
+			src: new Attribute,
+			alt: new Attribute,
+			title: new Attribute,
+			class: new Attribute({default: "widgets-img"})
+		}
+	}
 }
 
 defParser(Image, "img", "widgets-img")
@@ -21,9 +24,9 @@ Image.register("command", {
     return pm.tr.replaceSelection(this.create({src, title, alt})).apply(andScroll)
   },
   params: [
-    {label: "Image URL", type: "text"},
-    {label: "Description / alternative text", type: "text", default: ""},
-    {label: "Title", type: "text", default: ""}
+    {name: "File", label: "Image File", type: "file", default: "img.png"},
+    {name: "Description", label: "Description / alternative text", type: "text"},
+    {name: "Title", label: "Title", type: "text"}
   ],
   select(pm) {
     return pm.doc.path(pm.selection.from.path).type.canContainType(this)
@@ -35,7 +38,7 @@ Image.register("command", {
   }
 })
 
-defParamsClick(Image)
+defParamsClick(Image,"schema:image:insertImage")
 
 insertCSS(`
 

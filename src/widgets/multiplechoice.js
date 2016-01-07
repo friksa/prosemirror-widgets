@@ -1,29 +1,31 @@
-import {Block, Paragraph, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
+import {Block, Textblock, Paragraph, Text, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, andScroll} from "../utils"
+import {findSelectionNear} from "../../../../git/prosemirror/dist/edit/selection"
+import {defParser, andScroll, namePattern} from "../utils"
 
 export class Choice extends Paragraph {
 	static get kind() { return "." }
+	get attrs() {
+		return {
+			name: new Attribute(),
+			value: new Attribute()
+		}
+	}
 
 	create(attrs, content, marks) {
-		if (attrs.value > 0) content = [this.schema.node("radiobutton",attrs)]
+		if (attrs.value > 0) content = [this.schema.node("radiobutton",attrs," ")]
 		return super.create(attrs, content, marks)
 	}
 }
 
-Choice.attributes = {
-	name: new Attribute(),
-	value: new Attribute()
-}
-
 export class MultipleChoice extends Block {
 	static get contains() { return "choice"}
+	get attrs() {
+		return {
+			name: new Attribute
+		}
+	}
 }
-
-MultipleChoice.attributes = {
-	name: new Attribute()
-}
-
 
 defParser(Choice,"p","widgets-choice")
 defParser(MultipleChoice,"div","widgets-multiplechoice")
@@ -36,13 +38,14 @@ Choice.register("command", {
   name: "splitChoice",
   label: "Split the current choice",
   run(pm) {
+	console.log("splitChoice")
     let {node, from, to} = pm.selection
     if ((node && node.isBlock) || from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
      let toParent = from.shorten(), grandParent = pm.doc.path(toParent.path)
     if (grandParent.type.name != "multiplechoice") return false
     return pm.tr.delete(from, to).split(from, 1, pm.schema.nodes.choice, {name: grandParent.attrs.name, value: grandParent.size}).apply(andScroll)
   },
-  key: "Enter(50)"
+  key: "Enter(90)"
 })
 
 Choice.register("command", {
@@ -78,21 +81,16 @@ MultipleChoice.register("command",{
 	run(pm, name) {
     	let {from} = pm.selection
 		let choice = pm.schema.node("choice",{name: name, value: 0})
-		pm.tr.replaceSelection(this.create({name: name}, choice)).apply(andScroll)
-		//find path of next sibling
-/*		let len = from.path.length-1
-		let sib = from.path[len]
-		let pfrom = from.path.splice(0,len).concat(sib+1) 
-	    pm.setTextSelection(from)
-*/
-		return true
+		let mc = this.create({name: name}, choice)		
+		let tr = pm.tr.replaceSelection(mc).apply(andScroll)
+		//pm.setTextSelection(pos)
+		return tr
 	},
 	select(pm) {
-		console.log("select")
 		return pm.doc.path(pm.selection.from.path).type.canContainType(this)
 	},
 	params: [
-		{ label: "Name", type: "text"}
+	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 8}},
 	],
     prefillParams(pm) {
 	    let {node} = pm.selection
@@ -103,7 +101,10 @@ MultipleChoice.register("command",{
 
 insertCSS(`
 
-.widgets-choice {}
+.widgets-choice {
+}
+
+
 .widgets-multiplechoice {}
 
 `)

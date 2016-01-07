@@ -2,11 +2,13 @@ import {Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll} from "../utils"
 
-export class InlineMath extends Inline {}
-
-InlineMath.attributes = {
-	tex: new Attribute({default: ""})
-} 
+export class InlineMath extends Inline {
+	get attrs() {
+		return {
+			tex: new Attribute
+		}
+	}
+}
 
 defParser(InlineMath, "span", "widgets-inlinemath")
 
@@ -29,7 +31,7 @@ InlineMath.register("command", {
     	return pm.tr.replaceSelection(this.create({tex})).apply(andScroll)
   	},
 	params: [
-     	{ label: "Latex Expression", type: "text" }
+     	{ name: "Latex", label: "Latex Expression", type: "text" }
 	],
     prefillParams(pm) {
       let {node} = pm.selection
@@ -38,7 +40,7 @@ InlineMath.register("command", {
     }
 })
 
-defParamsClick(InlineMath)
+defParamsClick(InlineMath,"schema:inlinemath:insertInlineMath")
 
 insertCSS(`
 

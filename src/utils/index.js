@@ -1,9 +1,12 @@
+export {widgetParamHandler} from "./params"
 import {readParams} from "../../../../git/prosemirror/dist/menu/menu"
 import {Pos} from "../../../../git/prosemirror/dist/model"
 import {selectableNodeAbove} from "../../../../git/prosemirror/dist/edit/selection"
+import {widgetParamHandler} from "../utils"
 
 export const andScroll = {scrollIntoView: true}
-
+export const namePattern = "(\\w)+"
+	
 MathJax.Hub.Queue(function () {
     MathJax.Hub.Config({
     	tex2jax: {
@@ -42,13 +45,12 @@ function selectClickedNode(pm, e) {
 	  e.preventDefault()
 	}
 
-export function defParamsClick(type) {
+export function defParamsClick(type, cmdname) {
 	type.prototype.handleClick = (pm, e, path, node) => {
-		let menu = pm.mod.menuBar.menu
-		let cmd = pm.commands["insert"+type.name]
-		if (menu && cmd) {
+		let cmd = pm.commands[cmdname]
+		if (cmd) {
 			selectClickedNode(pm,e)
-			menu.enter(readParams(cmd))
+			widgetParamHandler(pm,cmd)
 			return true;
 		} else
 			return false;

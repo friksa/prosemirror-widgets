@@ -1,15 +1,17 @@
 import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
 
-export class Scale extends Block {}
-
-Scale.attributes = {
-	name: new Attribute(),
-	startvalue: new Attribute({default: "1"}),
-	startlabel: new Attribute({default: "low"}),
-	endvalue: new Attribute({default: "10"}),
-	endlabel: new Attribute({default: "high"}),
+export class Scale extends Block {
+	get attrs() {
+		return {
+			name: new Attribute,
+			startvalue: new Attribute({default: "1"}),
+			startlabel: new Attribute({default: "low"}),
+			endvalue: new Attribute({default: "10"}),
+			endlabel: new Attribute({default: "high"}),
+		}
+	}
 }
 
 defParser(Scale,"div","scale")
@@ -21,10 +23,11 @@ Scale.prototype.serializeDOM = node => {
 	let endVal = Number(node.attrs.endvalue)
 	if (startVal < endVal)
 		for (let i = startVal; i <= endVal; i++) {
+			let name = node.attrs.name+i
 			dom.appendChild(
 				elt("span",{class: "widgets-scaleitem"},
-					elt("input",{name:node.attrs.name, type:"radio", value:i}),
-					i.toString()
+					elt("label",{for: name},i.toString()),
+					elt("input",{id: name, name:node.attrs.name, type:"radio", value:i})
 				)
 			)
 		}
@@ -32,8 +35,8 @@ Scale.prototype.serializeDOM = node => {
 		for (let i = startVal; i >=  endVal; i--) {
 			dom.appendChild(
 				elt("span",{class: "widgets-scaleitem"},
-					elt("input",{name:node.attrs.name, type:"radio", value:i}),
-					i.toString()
+					elt("label",{for: name},i.toString()),
+					elt("input",{id: name, name:node.attrs.name, type:"radio", value:i})
 				)
 			)
 		}
@@ -48,24 +51,38 @@ Scale.register("command",{
     	return pm.tr.replaceSelection(this.create({name,startvalue,startlabel,endvalue,endlabel})).apply(andScroll)
   	},
 	params: [
-     	{ label: "Name", type: "text"},
-     	{ label: "Start value", type: "text", default: 1},
-     	{ label: "Start label", type: "text", default: "min"},
-     	{ label: "End value", type: "text", default: 10},
-     	{ label: "End label", type: "text", default: "max"}
+	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 8}},
+     	{ label: "Start value", type: "number", default: 1},
+     	{ name: "Start Label", label: "Text on left", type: "text", default: "low"},
+     	{ label: "End value", type: "number", default: 10},
+     	{ name: "End Label", label: "Text on right", type: "text", default: "high"}
 	],
     prefillParams(pm) {
 	    let {node} = pm.selection
 	    if (node)
 	      return [node.attrs.name, node.attrs.startvalue, node.attrs.startlabel, node.attrs.endvalue, node.attrs.endlabel]
-	 }
+	}
 })
 
-defParamsClick(Scale)
+defParamsClick(Scale,"schema:scale:insertScale")
 
 insertCSS(`
 
-.widgets-scaleitem {}		
-.widgets-scale {}
+.widgets-scaleitem {
+	display: inline-block;
+	text-align: center;
+}
+
+.widgets-scaleitem input {
+	display: block;
+}
+
+.widgets-scale {
+	display: block;
+}
+
+.widgets-scale span {
+	vertical-align: middle;
+}
 
 `)

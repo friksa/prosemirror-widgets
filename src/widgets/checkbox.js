@@ -1,39 +1,39 @@
-import {Attribute} from "../../../../git/prosemirror/dist/model"
+import {Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {Input} from "./input"
-import {defParser, defParamsClick, andScroll} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
 
-export class CheckBox extends Input {}
-
-CheckBox.attributes = {
-	name: new Attribute(),
-	type: new Attribute({default: "checkbox"}),
-	value: new Attribute({default: 1}),
-	class: new Attribute({default: "widgets-checkbox"})
+export class CheckBox extends Input {
+	get attrs() {
+		return {
+			name: new Attribute,
+			type: new Attribute({default: "checkbox"}),
+			value: new Attribute({default: "1"}),
+			class: new Attribute({default: "widgets-checkbox"})
+		}
+	}
 }
 
+CheckBox.attributes = 
 defParser(CheckBox,"input","widgets-checkbox")
-
-// Checkbox inherits serializer from input
-
 
 CheckBox.register("command", {
 	name: "insertCheckBox",
 	label: "CheckBox",
-	run(pm, name, label, loc) {
-    	return pm.tr.replaceSelection(this.create({name, label, loc})).apply(andScroll)
+	run(pm, name) {
+    	return pm.tr.replaceSelection(this.create({name})).apply(andScroll)
   	},
 	params: [
-     	{ label: "Name", type: "text"},
+	   { name: "Name", label: "Short ID name", type: "text", default: "", options: {pattern: namePattern, size: 8}},
 	],
     prefillParams(pm) {
 	    let {node} = pm.selection
-	    if (node)
-	      return [node.attrs.name, node.attrs.label, node.attrs.loc]
+	    if (node && node.type == this)
+	      return [node.attrs.name]
 	}
 })
 
-defParamsClick(CheckBox)
+defParamsClick(CheckBox,"schema:checkbox:insertCheckBox")
 
 insertCSS(`
 

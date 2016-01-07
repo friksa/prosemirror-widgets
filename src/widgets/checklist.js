@@ -1,9 +1,15 @@
 import {Block, Paragraph, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
 
 export class CheckItem extends Paragraph {
 	static get kind() { return "." }
+	get attrs() {
+		return {
+			name: new Attribute,
+			value: new Attribute
+		}
+	}
 
 	create(attrs, content, marks) {
 		if (attrs.value > 0) content = [this.schema.node("checkbox",attrs)]
@@ -11,19 +17,14 @@ export class CheckItem extends Paragraph {
 	}
 }
 
-CheckItem.attributes = {
-	name: new Attribute(),
-	value: new Attribute()
-}
-
-
 export class CheckList extends Block {
 	static get contains() { return "checkitem" }
-}
-
-CheckList.attributes = {
-	name: new Attribute(),
-	layout: new Attribute({default: "vertical"})
+	get attrs() {
+		return {
+			name: new Attribute,
+			layout: new Attribute({default: "vertical"})
+		}
+	}
 }
 
 defParser(CheckItem,"div","widgets-checkitem")
@@ -64,8 +65,8 @@ CheckList.register("command", {
 		return pm.tr.replaceSelection(this.create({name:name+"-0", layout:layout},chkitem)).apply(andScroll)
   	},
 	params: [
-     	{ label: "Name", type: "text"},
-     	{ label: "Layout (vertical, horizontal)", type: "select", options: [
+	    { name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 8}},
+     	{ name: "Layout", label: "vertical or horizontal", type: "select", options: [
      	    {value: "horizontal", label: "horizontal"},
      	    {value: "vertical", label: "vertical"}
      	  ]}
