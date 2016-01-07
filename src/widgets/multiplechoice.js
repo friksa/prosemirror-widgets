@@ -2,6 +2,7 @@ import {Block, Textblock, Paragraph, Text, Attribute, Pos} from "../../../../git
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {findSelectionNear} from "../../../../git/prosemirror/dist/edit/selection"
 import {defParser, andScroll, namePattern} from "../utils"
+import {defineCommand} from "../../../../git/prosemirror/dist/edit"
 
 export class Choice extends Paragraph {
 	static get kind() { return "." }
@@ -38,14 +39,13 @@ Choice.register("command", {
   name: "splitChoice",
   label: "Split the current choice",
   run(pm) {
-	console.log("splitChoice")
     let {node, from, to} = pm.selection
     if ((node && node.isBlock) || from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
      let toParent = from.shorten(), grandParent = pm.doc.path(toParent.path)
     if (grandParent.type.name != "multiplechoice") return false
     return pm.tr.delete(from, to).split(from, 1, pm.schema.nodes.choice, {name: grandParent.attrs.name, value: grandParent.size}).apply(andScroll)
   },
-  key: "Enter(90)"
+  keys: ["Enter(5)"]
 })
 
 Choice.register("command", {
@@ -72,7 +72,7 @@ Choice.register("command", {
     		return false;
     }
   },
-  key: ["Backspace(50)", "Mod-Backspace(50)"]
+  keys: ["Backspace(50)", "Mod-Backspace(50)"]
 })
 
 MultipleChoice.register("command",{
@@ -94,7 +94,7 @@ MultipleChoice.register("command",{
 	],
     prefillParams(pm) {
 	    let {node} = pm.selection
-	    if (node)
+	    if (node && node.type == this)
 	      return [node.attrs.name]
 	 }
 })

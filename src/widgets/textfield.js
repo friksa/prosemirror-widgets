@@ -30,7 +30,7 @@ TextField.register("command", {
 	],
     prefillParams(pm) {
 	    let {node} = pm.selection
- 	    if (node)
+ 	    if (node && node.type == this)
 	      return [node.attrs.name, node.attrs.size ]
 	 }
 })

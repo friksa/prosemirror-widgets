@@ -69,7 +69,7 @@ insertCSS(`
 		
 .ProseMirror {
 	width: 800px;
-	height: 200px;
+	min-height: 200px;
 }
 
 div.ProseMirror-select-menu {

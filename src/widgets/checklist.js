@@ -49,11 +49,10 @@ CheckItem.register("command", {
 	    let {node, from, to} = pm.selection
 	    if ((node && node.isBlock) || from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
 	    let toParent = from.shorten(), grandParent = pm.doc.path(toParent.path)
-	    console.log(grandParent.type.name)
 	    if (grandParent.type.name != "checklist") return false
 	    return pm.tr.delete(from, to).split(from, 1, pm.schema.nodes.checkitem, {name: grandParent.attrs.name, value: grandParent.size}).apply(andScroll)
 	  },
-	  key: "Enter(50)"
+	  keys: ["Enter(50)"]
 	})
 
 
@@ -73,7 +72,7 @@ CheckList.register("command", {
 	],
     prefillParams(pm) {
 	    let {node} = pm.selection
-	    if (node)
+	    if (node && node.type == this)
 	      return [node.attrs.name, node.attrs.layout]
 	 }
 })
@@ -89,7 +88,7 @@ CheckItem.register("command", {
     	name: grandParent.attrs.name+"-"+grandParent.size, 
     	value: grandParent.size}).apply(andScroll)
   },
-  key: "Enter(50)"
+  keys: ["Enter(50)"]
 })
 
 CheckItem.register("command", {
@@ -116,7 +115,7 @@ CheckItem.register("command", {
     		return false;
     }
   },
-  key: ["Backspace(50)", "Mod-Backspace(50)"]
+  keys: ["Backspace(50)", "Mod-Backspace(50)"]
 })
 
 

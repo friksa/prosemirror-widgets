@@ -1,4 +1,3 @@
-import {defineParamHandler} from "../../../../git/prosemirror/dist/edit"
 import {elt,insertCSS} from "../../../../git/prosemirror/dist/dom"
 
 const inputTypes = ["text","number","range","email","url","date"]
@@ -122,7 +121,7 @@ function FileDragHover(e) {
 function buildUploadForm(pm, field) {
 	let legend = elt("legend", null, "HTML File Upload")
 	let inputHidden = elt("input",{type: "hidden", id: "MAX_FILE_SIZE", name: "MAX_FILE_SIZE", value:"300000"})
-	let label = elt("label", {for: "fileselect"},"Files to upload:")
+	let label = elt("label", {for: "fileselect"},"File to upload:")
 	let fileselect = elt("input",{id: "fileselect", type: "file", name: "fileselect[]", multiple: "multiple"})
 	let filedrag = elt("div",{id: "filedrag"},"or drop files here")
 	let cancel = elt("button",{type: "button"}, "Cancel")

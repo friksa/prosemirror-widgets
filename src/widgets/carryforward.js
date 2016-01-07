@@ -36,7 +36,7 @@ CarryForward.register("command", {
     prefillParams(pm) {
   		pm.commands["schema:carryforward:insertCarryForward"].spec.params[0].options = getCarryOptions(["test1","test2"])
 	    let {node} = pm.selection
-	    if (node) {
+	    if (node && node.type == this) {
 	      return [node.attrs.name]
 	    }
 	 }

@@ -47,7 +47,6 @@ function selectClickedNode(pm, e) {
 
 export function defParamsClick(type, cmdname) {
 	type.prototype.handleClick = (pm, e, path, node) => {
-		console.log(cmdname)
 		let cmd = pm.commands[cmdname]
 		if (cmd) {
 			selectClickedNode(pm,e)
