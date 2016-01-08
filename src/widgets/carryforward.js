@@ -46,6 +46,8 @@ defParamsClick(CarryForward,"schema:carryforward:insertCarryForward")
 
 insertCSS(`
 
-.widgets-carryforward {}
+.ProseMirror .widgets-carryforward img:hover {
+	cursor: pointer;
+}
 
 `)

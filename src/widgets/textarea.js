@@ -27,7 +27,7 @@ TextArea.register("command", {
     	return pm.tr.replaceSelection(this.create({name,rows,cols})).apply(andScroll)
   	},
 	params: [
-	    { name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 8}},
+	    { name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
      	{ name: "Rows", label: "Rows in lines", type: "number", default: "4", options: {min: 1, max:20}},
      	{ name: "Columns", label: "Columns in characters", type: "number", default: "40", options: {min: 1, max:80}}
 	],
@@ -42,6 +42,8 @@ defParamsClick(TextArea,"schema:textarea:insertTextArea")
 
 insertCSS(`
 
-.widgets-textarea {}
+.ProseMirror .widgets-textarea:hover {
+	cursor: pointer
+}
 
 `)

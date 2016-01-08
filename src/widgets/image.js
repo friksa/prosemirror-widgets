@@ -42,6 +42,8 @@ defParamsClick(Image,"schema:image:insertImage")
 
 insertCSS(`
 
-.widgets-image {}
+.ProseMirror .widgets-img:hover {
+	cursor: pointer;
+}
 
 `)

@@ -46,6 +46,8 @@ defParamsClick(IFrame,"schema:iframe:insertIFrame")
 
 insertCSS(`
 
-.widgets-iframe {}
+.ProseMirror .widgets-iframe:hover {
+	cursor: pointer;
+}
 
 `)

@@ -25,7 +25,7 @@ TextField.register("command", {
     	return pm.tr.replaceSelection(this.create({name,size})).apply(andScroll)
   	},
 	params: [
-     	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 8}},
+     	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
      	{ name: "Size", label: "Size in characters", type: "number", default: "20", options: {min: 1, max:80}}
 	],
     prefillParams(pm) {
@@ -39,6 +39,8 @@ defParamsClick(TextField, "schema:textfield:insertTextField")
 
 insertCSS(`
 
-.widgets-textfield {}
+.ProseMirror .widgets-textfield:hover {
+	cursor: pointer
+}
 
 `)

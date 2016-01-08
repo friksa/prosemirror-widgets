@@ -62,6 +62,8 @@ defParamsClick(SpreadSheet,"schema:spreadsheet:insertSpreadSheet")
 
 insertCSS(`
 
-.widgets-spreadsheet {}
+.ProseMirror .widgets-spreadsheet:hover {
+	cursor: pointer;
+}
 
 `)

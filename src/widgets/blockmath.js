@@ -43,6 +43,8 @@ defParamsClick(BlockMath,"schema:blockmath:insertBlockMath")
 
 insertCSS(`
 
-.widgets-blockmath {}
+.ProseMirror .widgets-blockmath:hover {
+	cursor: pointer;
+}
 
 `)

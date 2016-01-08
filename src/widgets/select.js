@@ -30,7 +30,7 @@ Select.register("command", {
     	return pm.tr.replaceSelection(this.create({name,options,multiple})).apply(andScroll)
   	},
 	params: [
-	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 8}},
+	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
       	{ name: "Options", label: "comma separated names", type: "text"},
      	{ name: "Selection", label: "Selection (single or multiple)", type: "select", options: [
      	    {value: "multiple", label:"multiple"},
@@ -49,6 +49,8 @@ defParamsClick(Select,"schema:select:insertSelect")
 
 insertCSS(`
 
-.widgets-select {}
+.ProseMirror .widgets-select:hover {
+	cursor: pointer;
+}
 
 `)

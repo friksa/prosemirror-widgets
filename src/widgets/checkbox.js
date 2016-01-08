@@ -23,7 +23,7 @@ CheckBox.register("command", {
     	return pm.tr.replaceSelection(this.create({name})).apply(andScroll)
   	},
 	params: [
-	   { name: "Name", label: "Short ID name", type: "text", default: "", options: {pattern: namePattern, size: 8}},
+	   { name: "Name", label: "Short ID name", type: "text", default: "", options: {pattern: namePattern, size: 10}},
 	],
     prefillParams(pm) {
 	    let {node} = pm.selection
@@ -36,6 +36,8 @@ defParamsClick(CheckBox,"schema:checkbox:insertCheckBox")
 
 insertCSS(`
 
-.widgets-checkbox {}
+.ProseMirror .widgets-checkbox:hover {
+	cursor: pointer;
+}
 
 `)

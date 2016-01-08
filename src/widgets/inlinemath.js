@@ -44,6 +44,8 @@ defParamsClick(InlineMath,"schema:inlinemath:insertInlineMath")
 
 insertCSS(`
 
-.widgets-inlinemath {}
+.ProseMirror .widgets-inlinemath {
+	cursor: pointer;	
+}
 
 `)

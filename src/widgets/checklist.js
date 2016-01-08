@@ -22,6 +22,7 @@ export class CheckList extends Block {
 	get attrs() {
 		return {
 			name: new Attribute,
+			title: new Attribute,
 			layout: new Attribute({default: "vertical"})
 		}
 	}
@@ -38,6 +39,7 @@ CheckItem.prototype.serializeDOM = (node,s) => s.renderAs(node,"p", {
 
 CheckList.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",{
 	name: node.attrs.name,
+	title: node.attrs.title,
 	layout: node.attrs.layout,
 	class: "widgets-checklist"
 })
@@ -59,13 +61,16 @@ CheckItem.register("command", {
 CheckList.register("command", {
 	name: "insertCheckList",
 	label: "CheckList",
-	run(pm, name, layout) {
-		let chkitem = pm.schema.nodes.checkitem.create({name:name, value: 0})                                    
-		return pm.tr.replaceSelection(this.create({name:name+"-0", layout:layout},chkitem)).apply(andScroll)
+	run(pm, name, title, layout) {
+		let {node} = pm.selection
+		let chklist = this.create({name: name, title: title, layout:layout},node? node.content:
+			pm.schema.nodes.checkitem.create({name:name, value: 0}))                                    
+		return pm.tr.replaceSelection(chklist).apply(andScroll)
   	},
 	params: [
-	    { name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 8}},
-     	{ name: "Layout", label: "vertical or horizontal", type: "select", options: [
+	    { name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
+	    { name: "Title", label: "Title", type: "text"},
+	    { name: "Layout", label: "vertical or horizontal", type: "select", options: [
      	    {value: "horizontal", label: "horizontal"},
      	    {value: "vertical", label: "vertical"}
      	  ]}
@@ -73,7 +78,7 @@ CheckList.register("command", {
     prefillParams(pm) {
 	    let {node} = pm.selection
 	    if (node && node.type == this)
-	      return [node.attrs.name, node.attrs.layout]
+	      return [node.attrs.name, node.attrs.title, node.attrs.layout]
 	 }
 })
 
@@ -118,11 +123,21 @@ CheckItem.register("command", {
   keys: ["Backspace(50)", "Mod-Backspace(50)"]
 })
 
-
+defParamsClick(CheckList,"schema:checklist:insertCheckList")
 
 insertCSS(`
 
-.widgets-checkitem {}
-.widgets-checklist {}
+.ProseMirror .widgets-checkitem {
+	cursor: text;
+}
 
+.widgets-checklist:before {
+	content: attr(title);
+	color: black;
+	font-weight: bold;
+}
+
+.ProseMirror .widgets-checklist:hover {
+	cursor: pointer;
+}
 `)

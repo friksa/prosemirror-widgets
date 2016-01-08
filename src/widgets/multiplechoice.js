@@ -1,7 +1,7 @@
 import {Block, Textblock, Paragraph, Text, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {findSelectionNear} from "../../../../git/prosemirror/dist/edit/selection"
-import {defParser, andScroll, namePattern} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
 
 export class Choice extends Paragraph {
 	static get kind() { return "." }
@@ -22,7 +22,8 @@ export class MultipleChoice extends Block {
 	static get contains() { return "choice"}
 	get attrs() {
 		return {
-			name: new Attribute
+			name: new Attribute,
+			title: new Attribute
 		}
 	}
 }
@@ -32,7 +33,7 @@ defParser(MultipleChoice,"div","widgets-multiplechoice")
 
 Choice.prototype.serializeDOM = (node,s) => s.renderAs(node,"p", {name: node.attrs.name, value: node.attrs.value, class: "widgets-choice"})
 
-MultipleChoice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",{name: node.attrs.name, class: "widgets-multiplechoice"})
+MultipleChoice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",{name: node.attrs.name, title: node.attrs.title, class: "widgets-multiplechoice"})
 
 Choice.register("command", {
   name: "splitChoice",
@@ -77,33 +78,45 @@ Choice.register("command", {
 MultipleChoice.register("command",{
 	name: "insertMultipleChoice",
 	label: "MultipleChoice",
-	run(pm, name) {
-    	let {from} = pm.selection
-		let choice = pm.schema.node("choice",{name: name, value: 0})
-		let mc = this.create({name: name}, choice)		
-		let tr = pm.tr.replaceSelection(mc).apply(andScroll)
-		//pm.setTextSelection(pos)
-		return tr
+	run(pm, name, title) {
+    	let {node, from} = pm.selection
+    	let mc = this.create({name, title}, node? node.content: pm.schema.node("choice",{name, value: 0}))
+   		let tr = pm.tr.replaceSelection(mc).apply(andScroll)
+ 		return tr
 	},
 	select(pm) {
 		return pm.doc.path(pm.selection.from.path).type.canContainType(this)
 	},
 	params: [
-	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 8}},
+	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
+	 	{ name: "Title", label: "Description", type: "text"}
 	],
     prefillParams(pm) {
 	    let {node} = pm.selection
 	    if (node && node.type == this)
-	      return [node.attrs.name]
+	      return [node.attrs.name, node.attrs.title]
 	 }
 })
+
+defParamsClick(MultipleChoice,"schema:multiplechoice:insertMultipleChoice")
 
 insertCSS(`
 
 .widgets-choice {
 }
 
+.widgets-multiplechoice:before {
+	content: attr(title);
+	color: black;
+	font-size: 14px;
+	font-weight: bold;
+}
 
-.widgets-multiplechoice {}
+.ProseMirror .widgets-choice:hover {
+	cursor: text;
+}
 
+.ProseMirror .widgets-multiplechoice:hover {
+	cursor: pointer;
+}
 `)
