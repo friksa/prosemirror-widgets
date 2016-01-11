@@ -8,6 +8,7 @@ export class SpreadSheet extends Block {
 			data: new Attribute
 		}
 	}
+	get contains() { return null }
 }
 
 defParser(SpreadSheet,"div","widgets-spreadsheet")

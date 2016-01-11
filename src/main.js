@@ -14,7 +14,7 @@ import {Input, TextField, TextArea, CheckBox, RadioButton, Select,
 	Choice, MultipleChoice, Scale, CheckItem, CheckList, Widget} from "./widgets"
 
 
-const widgetsSpec = new SchemaSpec({
+const widgetSpec = new SchemaSpec({
 	doc: Doc,
 	blockquote: BlockQuote,
 	ordered_list: OrderedList,
@@ -53,7 +53,7 @@ const widgetsSpec = new SchemaSpec({
 	code: CodeMark
 })
 
-const widgetSchema = new Schema(widgetsSpec)
+const widgetSchema = new Schema(widgetSpec)
 
 let pm = window.pm = new ProseMirror({
   place: document.querySelector("#editor"),
@@ -78,13 +78,15 @@ insertCSS(`
 
 div.ProseMirror-select-menu {
   position: absolute;
+  top: 25px !Important; 
   background: #0191C8;
   color: white;
+  border-radius: 6px;
   padding: 2px 2px;
   z-index: 15;
 }
 
-div.ProseMirror-select-menu div {
+div.ProseMirror-select-menu {
   cursor: pointer;
   padding: 0 1em 0 2px;
 }
@@ -99,7 +101,7 @@ div.ProseMirror-menubar-inner {
 }
 
 div.ProseMirror-menu form {
-	background: linear-gradient(to bottom, white, #0191C8);	//background: #D6F2F8;
+	background: linear-gradient(to bottom, white, #0191C8);
 	width: 300px;
 }
 
@@ -111,20 +113,6 @@ div.ProseMirror-menu form select {
 div.ProseMirror-menu input[type = "text"] {
 	background: white;
 }
-
-/*div.ProseMirror-menubar-sliding {
-  -webkit-transition: right 0.2s ease-in;
-  -moz-transition: right 0.2s ease-in;
-  transition: right 0.2s ease-in;
-  position: relative;
-  left: 100%;
-  width: 100%;
-  box-sizing: -moz-border-box;
-  box-sizing: border-box;
-  padding-left: 16px;
-  background: #D6F2F8;
-}*/
-
 
 `)
 

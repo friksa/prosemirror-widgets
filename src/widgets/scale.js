@@ -1,8 +1,9 @@
-import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
+import {Block, Paragraph, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
 
 export class Scale extends Block {
+	static get contains() { return "paragraph"}
 	get attrs() {
 		return {
 			name: new Attribute,
@@ -17,15 +18,17 @@ export class Scale extends Block {
 
 defParser(Scale,"div","scale")
 
-Scale.prototype.serializeDOM = node => {
-	let dom = elt("div",{class: "widgets-scale", title: node.attrs.title, contenteditable: false})
-	dom.appendChild(elt("span", null, node.attrs.startlabel+" "))
+Scale.prototype.serializeDOM = (node,s) => {
+	let dom = s.renderAs(node,"div",{class: "widgets-scale", title: node.attrs.title, contenteditable: false})
+	let para = elt("p")
+	dom.appendChild(para)
+	para.appendChild(elt("span", null, node.attrs.startlabel+" "))
 	let startVal = Number(node.attrs.startvalue)
 	let endVal = Number(node.attrs.endvalue)
 	if (startVal < endVal)
 		for (let i = startVal; i <= endVal; i++) {
 			let name = node.attrs.name+i
-			dom.appendChild(
+			para.appendChild(
 				elt("span",{class: "widgets-scaleitem"},
 					elt("label",{for: name},i.toString()),
 					elt("input",{id: name, name:node.attrs.name, type:"radio", value:i})
@@ -34,14 +37,14 @@ Scale.prototype.serializeDOM = node => {
 		}
 	else
 		for (let i = startVal; i >=  endVal; i--) {
-			dom.appendChild(
+			para.appendChild(
 				elt("span",{class: "widgets-scaleitem"},
 					elt("label",{for: name},i.toString()),
 					elt("input",{id: name, name:node.attrs.name, type:"radio", value:i})
 				)
 			)
 		}
-	dom.appendChild(elt("span", null, " "+node.attrs.endlabel))
+	para.appendChild(elt("span", null, " "+node.attrs.endlabel))
 	return dom
 }
 
@@ -49,7 +52,8 @@ Scale.register("command",{
 	name: "insertScale",
 	label: "Scale",
 	run(pm, name, title, startvalue, startlabel, endvalue, endlabel) {
-    	return pm.tr.replaceSelection(this.create({name,title,startvalue,startlabel,endvalue,endlabel})).apply(andScroll)
+		let para = pm.schema.node("paragraph")
+    	return pm.tr.replaceSelection(this.create({name,title,startvalue,startlabel,endvalue,endlabel},para)).apply(andScroll)
   	},
 	params: [
 	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},

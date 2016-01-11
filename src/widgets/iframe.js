@@ -10,6 +10,7 @@ export class IFrame extends Block {
 			height: new Attribute({default: 200})
 		}
 	}
+	get contains() { return null }
 }
 
 defParser(IFrame, "iframe", "widgets-iframe")

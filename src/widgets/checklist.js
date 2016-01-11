@@ -51,8 +51,8 @@ CheckItem.register("command", {
 	    let {node, from, to} = pm.selection
 	    if ((node && node.isBlock) || from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
 	    let toParent = from.shorten(), grandParent = pm.doc.path(toParent.path)
-	    if (grandParent.type.name != "checklist") return false
-	    return pm.tr.delete(from, to).split(from, 1, pm.schema.nodes.checkitem, {name: grandParent.attrs.name, value: grandParent.size}).apply(andScroll)
+	    if (grandParent.type == CheckList)
+	    	return pm.tr.delete(from, to).split(from, 1, pm.schema.nodes.checkitem, {name: grandParent.attrs.name, value: grandParent.size}).apply(andScroll)
 	  },
 	  keys: ["Enter(50)"]
 	})

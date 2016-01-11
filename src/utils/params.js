@@ -30,6 +30,7 @@ function buildParamFields(pm, command) {
 		        autocomplete: "off",
 		        required: true}
 			)
+			// add attributes for special cases (min or max for example)
 			for (let prop in opt) field.setAttribute(prop, opt[prop])
 		} else if (param.type == "file") {
 			field = elt("input", {
@@ -43,10 +44,11 @@ function buildParamFields(pm, command) {
                 required: true}
 			)
 			for (let prop in opt) field.setAttribute(prop, opt[prop])
-		} else if (param.type == "select")
+		} else if (param.type == "select") {
 		  field = elt("select", {name}, (param.options.call ? param.options(pm) : param.options)
-		              .map(o => elt("option", {value: o.value, selected: o.value == val}, o.label)))
-		else
+		              .map(o => elt("option", {value: o.value}, o.label)))
+		  if (val) field.value = val
+		} else
 			throw new Error("Unsupported parameter type: " + param.type)
 		let fieldLabel = elt("label",{for: name},fname)
 		if (param.type == "file") {
@@ -95,13 +97,12 @@ function paramDialog(pm, command, callback) {
     })
 	let buttons = elt("div",{class: "widgetButtons"},save,cancel)
 	form = elt("form", {class: "widgetForm"}, elt("h4",null,command.label+" Settings"),fields, buttons)
-	// Treat Enter as a submit if form only has one field
+	// Submit if Enter pressed and all fields are valid
     form.addEventListener("keypress", e => {
     	if (e.keyCode == 13) {
-    		if (fields.length == 1) finish(e)
-    		else {
-    			e.preventDefault(); e.stopPropagation()
-    		}
+    		e.preventDefault(); e.stopPropagation()
+    		for (let i = 0; i < form.elements.length; i++) if (!form.elements[i].validity.valid) return;
+    		finish(e)
     	}
     })
 	dialog = elt("div",null,elt("div",{class: "widgetDialog"}),form)
@@ -110,8 +111,6 @@ function paramDialog(pm, command, callback) {
  
 	// FIXME too hacky?
 	setTimeout(() => {
-		let select = form.querySelector("select")
-		if (select) select.focus()
 		let input = form.querySelector("input, textarea")
 		if (input) input.focus()
 	}, 20)

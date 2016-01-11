@@ -1,26 +1,23 @@
 import {readParams} from "../../../../git/prosemirror/dist/menu/menu"
 import {Textblock} from "../../../../git/prosemirror/dist/model"
 import {elt} from "../../../../git/prosemirror/dist/dom"
-import {defineParamHandler} from "../../../../git/prosemirror/dist/edit"
+import {defineCommand,defineParamHandler} from "../../../../git/prosemirror/dist/edit"
 import {widgetParamHandler} from "../utils"
 
-const widgets = ["Image", "TextField", "TextArea", "CheckBox", "Select", "CarryForward",
-                 "IFrame", "InlineMath", "BlockMath", "SpreadSheet",
-                 "MultipleChoice", "Scale", "CheckList"]
+const inlineWidgets = ["Image", "TextField", "TextArea", "CheckBox", "Select", "CarryForward","IFrame", "InlineMath"] 
+const insertInlineWidget = inlineWidgets.map(w => ({ value: "insert"+w, display: () => { return elt("span",null, w)} }))
+const blockWidgets = ["BlockMath", "SpreadSheet", "MultipleChoice", "Scale", "CheckList"]
+const insertBlockWidget = blockWidgets.map(w => ({ value: "insert"+w, display: () => { return elt("span",null, w)} }))
 
- const insertWidget = widgets.map(w => ({
- 	value: "insert"+w,
- 	display: () => { return elt("span",null, w)}
- }))
  
 export class Widget extends Textblock {}
  
-Widget.register("command", {
-	name: "widgetInsert",
-	label: "Insert...",
+defineCommand({
+	name: "insertInlineWidget",
+	label: "Insert Inline Widget",
 	select(pm) {return true},
 	params: [
-	     {name: "Widget type", type: "select", options: insertWidget, defaultLabel: "Insert..."}
+	     {name: "Widget type", type: "select", options: insertInlineWidget, defaultLabel: elt("img",{src: "icons/insert.png", width: "16px", height: "16px", alt:" Insert inline widget", title: "Insert inline widget"})}
 	],
 	run(pm, type) {
 		if (!type.startsWith("insert")) return false
@@ -29,5 +26,22 @@ Widget.register("command", {
 		if (cmd) widgetParamHandler(pm,cmd)
 	},
 	display: { type: "param"},
-	menuGroup: "block(90)"
+	menuGroup: "inline(99)"
+})
+
+defineCommand({
+	name: "insertBlockWidget",
+	label: "Insert Block Widget",
+	select(pm) {return true},
+	params: [
+	     {name: "Widget type", type: "select", options: insertBlockWidget, defaultLabel: elt("img",{src: "icons/insert.png", width: "16px", height: "16px", alt:" Insert block widget", title: "Insert block widget"})}
+	],
+	run(pm, type) {
+		if (!type.startsWith("insert")) return false
+		let tname = "schema:"+type.split("insert")[1].toLowerCase()+":"+type
+		let cmd = pm.commands[tname]
+		if (cmd) widgetParamHandler(pm,cmd)
+	},
+	display: { type: "param"},
+	menuGroup: "block(99)"
 })

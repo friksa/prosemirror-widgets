@@ -1,68 +1,65 @@
-import {Block, Textblock, Paragraph, Text, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
-import {insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {findSelectionNear} from "../../../../git/prosemirror/dist/edit/selection"
+import {Block, Textblock, Paragraph, Text, Fragment, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
+import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
 
-export class Choice extends Paragraph {
-	static get kind() { return "." }
+export class Choice extends Textblock {
+	static get kinds() { return "choice" }
 	get attrs() {
 		return {
 			name: new Attribute(),
-			value: new Attribute()
+			value: new Attribute(),
+			class: new Attribute({default: "widgets-choice"})
 		}
 	}
-
 	create(attrs, content, marks) {
-		if (attrs.value > 0) content = [this.schema.node("radiobutton",attrs),this.schema.node("paragraph")]
-		return super.create(attrs, content, marks)
+		let children = [this.schema.node("radiobutton",attrs)]
+		if (content) children.push(content)
+		return super.create(attrs,children,marks)
 	}
 }
-
+ 
 export class MultipleChoice extends Block {
 	static get contains() { return "choice"}
+	get isList() { return true }
 	get attrs() {
 		return {
 			name: new Attribute,
-			title: new Attribute
+			title: new Attribute,
+			class: new Attribute({default: "widgets-multiplechoice"})
 		}
 	}
 }
 
-defParser(Choice,"p","widgets-choice")
+defParser(Choice,"div","widgets-choice")
 defParser(MultipleChoice,"div","widgets-multiplechoice")
 
-Choice.prototype.serializeDOM = (node,s) => s.renderAs(node,"p", {name: node.attrs.name, value: node.attrs.value, class: "widgets-choice"})
+Choice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",node.attrs)
 
-MultipleChoice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",{name: node.attrs.name, title: node.attrs.title, class: "widgets-multiplechoice"})
+MultipleChoice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",node.attrs)
 
 Choice.register("command", {
   name: "splitChoice",
   label: "Split the current choice",
   run(pm) {
-    let {node, from, to} = pm.selection
-    if ((node && node.isBlock) || from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
-     let toParent = from.shorten(), grandParent = pm.doc.path(toParent.path)
-    if (grandParent.type.name != "multiplechoice") return false
-    return pm.tr.delete(from, to).split(from, 1, pm.schema.nodes.choice, {name: grandParent.attrs.name, value: grandParent.size}).apply(andScroll)
+    let {from, to, node} = pm.selection
+    if ((node && node.isBlock) ||
+        from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
+    let toParent = from.shorten(), mc = pm.doc.path(toParent.path)
+   return pm.tr.delete(from, to).split(from, 1, this, {name: mc.attrs.name, value: mc.size}).apply(andScroll)
   },
-  keys: ["Enter(5)"]
+  keys: ["Enter(19)"]
 })
 
 Choice.register("command", {
   name: "deleteChoice",
   label: "delete this choice or multiplechoice",
   run(pm) {
-    let {head, empty} = pm.selection
-    if (!empty || head.offset > 1) return false
-    // Find the node before this one
-    let before, cut
-    for (let i = head.path.length - 1; !before && i >= 0; i--) if (head.path[i] > 0) {
-      cut = head.shorten(i)
-      before = pm.doc.path(cut.path).child(cut.offset - 1)
-    }
-	let mc = pm.doc.path(cut.path).child(cut.offset)
+    let {from, top} = pm.selection
+	let chc = pm.doc.path(from.path)
+    if (from.offset > 0) return false
+	//return pm.tr.delete(cut,cut.move(1)).apply()
     // if top choice, delete whole question if only one choice
-    if (mc.type.name == "choice") {
+/*    if (mc.type.name == "choice") {
     	return pm.tr.delete(cut, cut.move(1)).apply()
     } else {
     	// don't delete question if more than one choice
@@ -71,25 +68,26 @@ Choice.register("command", {
     	} else
     		return false;
     }
-  },
-  keys: ["Backspace(50)", "Mod-Backspace(50)"]
+*/  },
+  keys: ["Backspace(40)", "Mod-Backspace(40)"]
 })
 
 MultipleChoice.register("command",{
 	name: "insertMultipleChoice",
 	label: "MultipleChoice",
 	run(pm, name, title) {
-    	let {node, from} = pm.selection
+    	let {node, from, to} = pm.selection
     	let mc = this.create({name, title}, node? node.content: pm.schema.node("choice",{name, value: 0}))
    		let tr = pm.tr.replaceSelection(mc).apply(andScroll)
- 		return tr
+   		// need to move to newly added node
+  		return tr
 	},
 	select(pm) {
 		return pm.doc.path(pm.selection.from.path).type.canContainType(this)
 	},
 	params: [
-	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
-	 	{ name: "Title", label: "Description", type: "text"}
+	 	{ name: "Name", label: "Short ID name", type: "text", default: "test", options: {pattern: namePattern, size: 10}},
+	 	{ name: "Title", label: "Description", type: "text", default:"Test Title"}
 	],
     prefillParams(pm) {
 	    let {node} = pm.selection
@@ -102,8 +100,17 @@ defParamsClick(MultipleChoice,"schema:multiplechoice:insertMultipleChoice")
 
 insertCSS(`
 
-.widgets-choice {
+.widgets-choice input {
+	float: left;
 }
+
+div.widgets-choice:first-child > input {
+	display: none;
+}
+
+/*.widgets-choice:nth-child(n+1) span {
+	left: 20px;
+}*/
 
 .widgets-multiplechoice:before {
 	content: attr(title);

@@ -12,6 +12,7 @@ export class CheckBox extends Input {
 			class: new Attribute({default: "widgets-checkbox"})
 		}
 	}
+	get contains() { return null }
 }
 
 defParser(CheckBox,"input","widgets-checkbox")

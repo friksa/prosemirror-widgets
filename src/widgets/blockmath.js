@@ -8,6 +8,7 @@ export class BlockMath extends Block {
 			tex: new Attribute({default: ""})
 		}
 	}
+	get contains() { return null }
 }
 
 defParser(BlockMath,"div","widgets-blockmath")

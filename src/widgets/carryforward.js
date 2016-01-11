@@ -11,7 +11,9 @@ function getCarryOptions(names) {
 export class CarryForward extends Inline {
 	get attrs() {
 		return {
-			name: new Attribute
+			name: new Attribute,
+			model: new Attribute({default: "user_response"}),
+			type: new Attribute({default: "carry_forward"})
 		}
 	}
 }

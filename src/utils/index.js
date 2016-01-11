@@ -5,7 +5,7 @@ import {selectableNodeAbove} from "../../../../git/prosemirror/dist/edit/selecti
 import {widgetParamHandler} from "../utils"
 
 export const andScroll = {scrollIntoView: true}
-export const namePattern = "(\\w)+"
+export const namePattern = "[A-Za-z][A-Za-z0-9_-]*"
 	
 MathJax.Hub.Queue(function () {
     MathJax.Hub.Config({

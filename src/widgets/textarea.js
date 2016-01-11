@@ -11,6 +11,7 @@ export class TextArea extends Block {
 			class: new Attribute({default: "widgets-textarea"})
 		}
 	}
+	get contains() { return null }
 }
 
 TextArea.attributes = {

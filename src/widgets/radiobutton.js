@@ -12,6 +12,10 @@ export class RadioButton extends Input {
 			class: new Attribute({default: "widgets-radiobutton"})
 		}
 	}
+	
+	get selectable() { return false }
+	
+	get locked() { return true }
 }
 
 defParser(RadioButton,"input","widgets-radiobutton")
