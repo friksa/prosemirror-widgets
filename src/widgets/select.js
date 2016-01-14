@@ -1,6 +1,6 @@
 import {Block, Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
+import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
 
 export class Select extends Inline {
 	get attrs() {
@@ -30,7 +30,7 @@ Select.register("command", {
     	return pm.tr.replaceSelection(this.create({name,options,multiple})).apply(andScroll)
   	},
 	params: [
-	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
+	    getNameParam(),
       	{ name: "Options", label: "comma separated names", type: "text"},
      	{ name: "Selection", label: "Selection (single or multiple)", type: "select", options: [
      	    {value: "multiple", label:"multiple"},

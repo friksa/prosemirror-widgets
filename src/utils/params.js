@@ -6,6 +6,19 @@ const inputTypes = ["text","number","range","email","url","date"]
 let fhandler = null
 
 export function defineFileHandler(handler) { fhandler = handler}
+
+export function getNameParam() {
+ 	return { 
+ 		name: "Name", 
+ 		label: "Short ID", 
+ 		type: "text", 
+ 		options: {
+ 			pattern: "[a-z0-9_-]{1,10}", 
+ 			size: 10, 
+ 			title: "Name must be less than 11 lower-case letters,digits,dashes or underscores."
+ 		}
+ 	}
+}
                     
 function paramDefault(param, pm, command) {
 	return !param.default ? ""

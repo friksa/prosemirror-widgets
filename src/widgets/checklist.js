@@ -1,6 +1,6 @@
 import {Block, Paragraph, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
+import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
 
 export class CheckItem extends Paragraph {
 	static get kind() { return "." }
@@ -68,7 +68,7 @@ CheckList.register("command", {
 		return pm.tr.replaceSelection(chklist).apply(andScroll)
   	},
 	params: [
-	    { name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
+	    getNameParam(),
 	    { name: "Title", label: "Title", type: "text"},
 	    { name: "Layout", label: "vertical or horizontal", type: "select", options: [
      	    {value: "horizontal", label: "horizontal"},

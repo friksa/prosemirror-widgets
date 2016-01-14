@@ -1,6 +1,6 @@
-import {Block, Textblock, Paragraph, Text, Fragment, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
+import {Block, Textblock, Paragraph, TextNode, Text, Fragment, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
+import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
 
 export class Choice extends Textblock {
 	static get kinds() { return "choice" }
@@ -13,14 +13,12 @@ export class Choice extends Textblock {
 	}
 	create(attrs, content, marks) {
 		let children = [this.schema.node("radiobutton",attrs)]
-		if (content) children.push(content)
 		return super.create(attrs,children,marks)
 	}
 }
  
 export class MultipleChoice extends Block {
 	static get contains() { return "choice"}
-	get isList() { return true }
 	get attrs() {
 		return {
 			name: new Attribute,
@@ -28,6 +26,7 @@ export class MultipleChoice extends Block {
 			class: new Attribute({default: "widgets-multiplechoice"})
 		}
 	}
+	get isList() { return true }
 }
 
 defParser(Choice,"div","widgets-choice")
@@ -42,10 +41,9 @@ Choice.register("command", {
   label: "Split the current choice",
   run(pm) {
     let {from, to, node} = pm.selection
-    if ((node && node.isBlock) ||
-        from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
+    if ((node && node.isBlock) || from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
     let toParent = from.shorten(), mc = pm.doc.path(toParent.path)
-   return pm.tr.delete(from, to).split(from, 1, this, {name: mc.attrs.name, value: mc.size}).apply(andScroll)
+    return pm.tr.delete(from, to).split(from, 1, this, {name: mc.attrs.name, value: mc.size}).apply(andScroll)
   },
   keys: ["Enter(19)"]
 })
@@ -54,12 +52,11 @@ Choice.register("command", {
   name: "deleteChoice",
   label: "delete this choice or multiplechoice",
   run(pm) {
-    let {from, top} = pm.selection
-	let chc = pm.doc.path(from.path)
+	let {from, to} = pm.selection
     if (from.offset > 0) return false
-	//return pm.tr.delete(cut,cut.move(1)).apply()
-    // if top choice, delete whole question if only one choice
-/*    if (mc.type.name == "choice") {
+    let mc = pm.doc.path(from.path)
+    //if top choice, delete whole question if only one choice
+    if (mc.type.name == "choice") {
     	return pm.tr.delete(cut, cut.move(1)).apply()
     } else {
     	// don't delete question if more than one choice
@@ -68,8 +65,8 @@ Choice.register("command", {
     	} else
     		return false;
     }
-*/  },
-  keys: ["Backspace(40)", "Mod-Backspace(40)"]
+  },
+  keys: ["Backspace(20)", "Mod-Backspace(20)"]
 })
 
 MultipleChoice.register("command",{
@@ -86,7 +83,7 @@ MultipleChoice.register("command",{
 		return pm.doc.path(pm.selection.from.path).type.canContainType(this)
 	},
 	params: [
-	 	{ name: "Name", label: "Short ID name", type: "text", default: "test", options: {pattern: namePattern, size: 10}},
+	    getNameParam(),
 	 	{ name: "Title", label: "Description", type: "text", default:"Test Title"}
 	],
     prefillParams(pm) {
@@ -104,13 +101,14 @@ insertCSS(`
 	float: left;
 }
 
-div.widgets-choice:first-child > input {
+div.widgets-choice:first-child input {
 	display: none;
 }
 
-/*.widgets-choice:nth-child(n+1) span {
-	left: 20px;
-}*/
+.widgets-choice:nth-child(n+1) span {
+	display: inline-block;
+	margin-left: 10px;
+}
 
 .widgets-multiplechoice:before {
 	content: attr(title);

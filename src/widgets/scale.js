@@ -1,6 +1,6 @@
 import {Block, Paragraph, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
+import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
 
 export class Scale extends Block {
 	static get contains() { return "paragraph"}
@@ -56,7 +56,7 @@ Scale.register("command",{
     	return pm.tr.replaceSelection(this.create({name,title,startvalue,startlabel,endvalue,endlabel},para)).apply(andScroll)
   	},
 	params: [
-	 	{ name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
+	    getNameParam(),
 	 	{ name: "Title", label: "Scale Title", type: "text"},
      	{ label: "Start value", type: "number", default: 1},
      	{ name: "Start Label", label: "Text on left", type: "text", default: "low"},

@@ -1,6 +1,6 @@
 import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
+import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
 
 export class TextArea extends Block {
 	get attrs() {
@@ -28,7 +28,7 @@ TextArea.register("command", {
     	return pm.tr.replaceSelection(this.create({name,rows,cols})).apply(andScroll)
   	},
 	params: [
-	    { name: "Name", label: "Short ID name", type: "text", options: {pattern: namePattern, size: 10}},
+	    getNameParam(),
      	{ name: "Rows", label: "Rows in lines", type: "number", default: "4", options: {min: 1, max:20}},
      	{ name: "Columns", label: "Columns in characters", type: "number", default: "40", options: {min: 1, max:80}}
 	],

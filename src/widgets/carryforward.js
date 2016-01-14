@@ -1,6 +1,6 @@
 import {Block, Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll} from "../utils"
+import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
  
 let carryOptions = []
 
@@ -32,9 +32,7 @@ CarryForward.register("command", {
 	run(pm, name) {
     	return pm.tr.replaceSelection(this.create({name})).apply(andScroll)
   	},
-	params: [
-     	{ name: "Name", label: "Name of field", type: "select", options: carryOptions }
-	],
+	params: [ getNameParam() ],
     prefillParams(pm) {
   		pm.commands["schema:carryforward:insertCarryForward"].spec.params[0].options = getCarryOptions(["test1","test2"])
 	    let {node} = pm.selection

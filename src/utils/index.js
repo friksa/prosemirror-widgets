@@ -1,11 +1,10 @@
-export {widgetParamHandler, defineFileHandler} from "./params"
+export {widgetParamHandler, defineFileHandler, getNameParam} from "./params"
 import {readParams} from "../../../../git/prosemirror/dist/menu/menu"
 import {Pos} from "../../../../git/prosemirror/dist/model"
 import {selectableNodeAbove} from "../../../../git/prosemirror/dist/edit/selection"
 import {widgetParamHandler} from "../utils"
 
 export const andScroll = {scrollIntoView: true}
-export const namePattern = "[A-Za-z][A-Za-z0-9_-]*"
 	
 MathJax.Hub.Queue(function () {
     MathJax.Hub.Config({

@@ -1,7 +1,7 @@
 import {Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {Input} from "./input"
-import {defParser, defParamsClick, andScroll, namePattern} from "../utils"
+import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
 
 export class CheckBox extends Input {
 	get attrs() {
@@ -23,9 +23,7 @@ CheckBox.register("command", {
 	run(pm, name) {
     	return pm.tr.replaceSelection(this.create({name})).apply(andScroll)
   	},
-	params: [
-	   { name: "Name", label: "Short ID name", type: "text", default: "", options: {pattern: namePattern, size: 10}},
-	],
+	params: [getNameParam()],
     prefillParams(pm) {
 	    let {node} = pm.selection
 	    if (node && node.type == this)
