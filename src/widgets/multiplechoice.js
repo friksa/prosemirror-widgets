@@ -1,8 +1,8 @@
 import {Block, Textblock, Paragraph, TextNode, Text, Fragment, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
 
-export class Choice extends Textblock {
+export class Choice extends Block {
 	static get kinds() { return "choice" }
 	get attrs() {
 		return {
@@ -83,14 +83,15 @@ MultipleChoice.register("command",{
 		return pm.doc.path(pm.selection.from.path).type.canContainType(this)
 	},
 	params: [
-	    getNameParam(),
-	 	{ name: "Title", label: "Description", type: "text", default:"Test Title"}
-	],
-    prefillParams(pm) {
-	    let {node} = pm.selection
-	    if (node && node.type == this)
-	      return [node.attrs.name, node.attrs.title]
-	 }
+ 	    { name: "Name", label: "Short ID", type: "text",
+   	  	  prefill: function(pm) { return selectedNodeAttr(pm, this, "name") },
+ 		  options: {
+ 			  pattern: namePattern, 
+ 			  size: 10, 
+ 			  title: nameTitle}},
+	 	{ name: "Title", label: "Description", type: "text", default:"Test Title", 
+	      prefill: function(pm) { return selectedNodeAttr(pm, this, "title") }}
+	]
 })
 
 defParamsClick(MultipleChoice,"schema:multiplechoice:insertMultipleChoice")

@@ -1,6 +1,6 @@
 import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll} from "../utils"
+import {defParser, defParamsClick, andScroll, selectedNodeAttr} from "../utils"
 
 export class IFrame extends Block {
 	get attrs() {
@@ -32,15 +32,15 @@ IFrame.register("command", {
     	return pm.tr.replaceSelection(this.create({src, width, height})).apply(andScroll)
   	},
 	params: [
-     	{ name: "URL", label: "Link to website, youTube, Google Maps ...", type: "url"},
-     	{ name: "Width", label: "Width in pixels", type: "number", default: 200, options: {min: 50, height:800}},
-     	{ name: "Height", label: "Height in pixels", type: "number", default: 200, options: {min: 50, height:800}},
-	],
-  	prefillParams(pm) {
-      let {node} = pm.selection
-      if (node && node.type == this)
-        return [node.attrs.src, node.attrs.width, node.attrs.height]
-    }
+     	{ name: "URL", label: "Link to website, youTube, Google Maps ...", type: "url", 
+       	  prefill: function(pm) { return selectedNodeAttr(pm, this, "src") }},
+     	{ name: "Width", label: "Width in pixels", type: "number", default: 200, 
+          prefill: function(pm) { return selectedNodeAttr(pm, this, "width") },
+       	  options: {min: 50, height:800}},
+     	{ name: "Height", label: "Height in pixels", type: "number", default: 200, 
+          prefill: function(pm) { return selectedNodeAttr(pm, this, "height") },
+       	  options: {min: 50, height:800}}
+	]
 })
 
 defParamsClick(IFrame,"schema:iframe:insertIFrame")

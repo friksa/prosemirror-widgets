@@ -5,32 +5,35 @@ const inputTypes = ["text","number","range","email","url","date"]
 
 let fhandler = null
 
-export function defineFileHandler(handler) { fhandler = handler}
+export const namePattern = "[a-z0-9_-]{1,10}"
+	
+export const nameTitle = "Name must be less than 11 lower-case letters,digits,dashes or underscores."
 
-export function getNameParam() {
- 	return { 
- 		name: "Name", 
- 		label: "Short ID", 
- 		type: "text", 
- 		options: {
- 			pattern: "[a-z0-9_-]{1,10}", 
- 			size: 10, 
- 			title: "Name must be less than 11 lower-case letters,digits,dashes or underscores."
- 		}
- 	}
-}
+export function defineFileHandler(handler) { fhandler = handler}
                     
-function paramDefault(param, pm, command) {
-	return !param.default ? ""
-	    : param.default.call ? param.default.call(command.self, pm)
-	    : param.default
+export function selectedNodeAttr(pm, type, name) {
+  let {node} = pm.selection
+  if (node && node.type == type) return node.attrs[name]
 }
-  
+
+function paramDefault(param, pm, command) {
+  if (param.prefill) {
+    let prefill = param.prefill.call(command.self, pm)
+    if (prefill != null) return prefill
+  }
+  return param.default
+}
+
+export function selectedNodeAttr(pm, type, name) {
+	  let {node} = pm.selection
+	  if (node && node.type == type) return node.attrs[name]
+	}
+
+
 function buildParamFields(pm, command) {
-	let prefill = command.spec.prefillParams && command.spec.prefillParams.call(command.self, pm)
 	let fields = command.params.map((param, i) => {
 	    let field, name = "field_" + i
-		let val = prefill ? prefill[i] : paramDefault(param, pm, command)
+	    let val = paramDefault(param, pm, command)
 		let fname = param.name? param.name: param.label
 		let opt = param.options ? param.options: {}
 		if (inputTypes.indexOf(param.type) >= 0) {

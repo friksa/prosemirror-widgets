@@ -1,6 +1,6 @@
 import {Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt,insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll} from "../utils"
+import {defParser, defParamsClick, andScroll, selectedNodeAttr} from "../utils"
 
 export class Image extends Inline {
 	get attrs() {
@@ -24,17 +24,15 @@ Image.register("command", {
     return pm.tr.replaceSelection(this.create({src, title, alt})).apply(andScroll)
   },
   params: [
-    {name: "File", label: "Image File", type: "file", default: "img.png"},
-    {name: "Description", label: "Description / alternative text", type: "text"},
-    {name: "Title", label: "Title", type: "text"}
+    { name: "File", label: "Image File", type: "file", default: "img.png", 
+   	 prefill: function(pm) { return selectedNodeAttr(pm, this, "src") }},
+    { name: "Description", label: "Description / alternative text", type: "text", 
+      prefill: function(pm) { return selectedNodeAttr(pm, this, "alt") }},
+    { name: "Title", label: "Title", type: "text",
+   	  prefill: function(pm) { return selectedNodeAttr(pm, this, "tex") }}
   ],
   select(pm) {
     return pm.doc.path(pm.selection.from.path).type.canContainType(this)
-  },
-  prefillParams(pm) {
-    let {node} = pm.selection
-    if (node && node.type == this)
-      return [node.attrs.src, node.attrs.alt, node.attrs.title]
   }
 })
 

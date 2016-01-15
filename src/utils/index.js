@@ -1,4 +1,4 @@
-export {widgetParamHandler, defineFileHandler, getNameParam} from "./params"
+export {widgetParamHandler, defineFileHandler, namePattern, nameTitle, selectedNodeAttr} from "./params"
 import {readParams} from "../../../../git/prosemirror/dist/menu/menu"
 import {Pos} from "../../../../git/prosemirror/dist/model"
 import {selectableNodeAbove} from "../../../../git/prosemirror/dist/edit/selection"

@@ -1,6 +1,6 @@
 import {Block, Paragraph, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
 
 export class CheckItem extends Paragraph {
 	static get kind() { return "." }
@@ -68,18 +68,21 @@ CheckList.register("command", {
 		return pm.tr.replaceSelection(chklist).apply(andScroll)
   	},
 	params: [
-	    getNameParam(),
-	    { name: "Title", label: "Title", type: "text"},
-	    { name: "Layout", label: "vertical or horizontal", type: "select", options: [
-     	    {value: "horizontal", label: "horizontal"},
-     	    {value: "vertical", label: "vertical"}
+ 	    { name: "Name", label: "Short ID", type: "text",
+   	  	  prefill: function(pm) { return selectedNodeAttr(pm, this, "name") },
+ 		  options: {
+ 			  pattern: namePattern, 
+ 			  size: 10, 
+ 			  title: nameTitle}},
+	    { name: "Title", label: "Title", type: "text",
+	      prefill: function(pm) { return selectedNodeAttr(pm, this, "title") }},
+	    { name: "Layout", label: "vertical or horizontal", type: "select",
+	      prefill: function(pm) { return selectedNodeAttr(pm, this, "tex") },
+	      options: [
+     	      {value: "horizontal", label: "horizontal"},
+     	      {value: "vertical", label: "vertical"}
      	  ]}
-	],
-    prefillParams(pm) {
-	    let {node} = pm.selection
-	    if (node && node.type == this)
-	      return [node.attrs.name, node.attrs.title, node.attrs.layout]
-	 }
+	]
 })
 
 CheckItem.register("command", {

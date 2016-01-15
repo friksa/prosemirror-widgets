@@ -1,6 +1,6 @@
 import {Block, Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
+import {defParser, defParamsClick, namePattern, nameTitle, selectedNodeAttr} from "../utils"
 
 export class Select extends Inline {
 	get attrs() {
@@ -30,19 +30,21 @@ Select.register("command", {
     	return pm.tr.replaceSelection(this.create({name,options,multiple})).apply(andScroll)
   	},
 	params: [
-	    getNameParam(),
-      	{ name: "Options", label: "comma separated names", type: "text"},
-     	{ name: "Selection", label: "Selection (single or multiple)", type: "select", options: [
+  	    { name: "Name", label: "Short ID", type: "text",
+     	  prefill: function(pm) { return selectedNodeAttr(pm, this, "name") },
+   		  options: {
+   			  pattern: namePattern, 
+   			  size: 10, 
+   			  title: nameTitle}},
+      	{ name: "Options", label: "comma separated names", type: "text", 
+		  prefill: function(pm) { return selectedNodeAttr(pm, this, "options") }},
+     	{ name: "Selection", label: "Selection (single or multiple)", type: "select", 
+		  prefill: function(pm) { return selectedNodeAttr(pm, this, "multiple") },
+		  options: [
      	    {value: "multiple", label:"multiple"},
      	    {value: "single", label:"single"}
      	]}
-	],
-    prefillParams(pm) {
-	    let {node} = pm.selection
-	    if (node && node.type == this) {
-	      return [node.attrs.name, node.attrs.options, node.attrs.multiple]
-	    }
-	 }
+	]
 })
 
 defParamsClick(Select,"schema:select:insertSelect")

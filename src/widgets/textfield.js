@@ -1,7 +1,7 @@
 import {Attribute} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {Input} from "./input"
-import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
 
 export class TextField extends Input {
 	get attrs() {
@@ -25,14 +25,16 @@ TextField.register("command", {
     	return pm.tr.replaceSelection(this.create({name,size})).apply(andScroll)
   	},
 	params: [
-	    getNameParam(),
-     	{ name: "Size", label: "Size in characters", type: "number", default: "20", options: {min: 1, max:80}}
-	],
-    prefillParams(pm) {
-	    let {node} = pm.selection
- 	    if (node && node.type == this)
-	      return [node.attrs.name, node.attrs.size ]
-	 }
+  	    { name: "Name", label: "Short ID", type: "text",
+     	  prefill: function(pm) { return selectedNodeAttr(pm, this, "name") },
+   		  options: {
+   			  pattern: namePattern, 
+   			  size: 10, 
+   			  title: nameTitle}},
+     	{ name: "Size", label: "Size in characters", type: "number", default: "20", 
+		  prefill: function(pm) { return selectedNodeAttr(pm, this, "size") },
+	      options: {min: 1, max:80}}
+	]
 })
 
 defParamsClick(TextField, "schema:textfield:insertTextField")

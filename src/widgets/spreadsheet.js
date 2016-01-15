@@ -1,6 +1,6 @@
 import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt,insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll} from "../utils"
+import {defParser, defParamsClick, andScroll, selectedNodeAttr} from "../utils"
 
 export class SpreadSheet extends Block {
 	get attrs() {
@@ -50,13 +50,9 @@ SpreadSheet.register("command", {
     	return pm.tr.replaceSelection(this.create({data})).apply(andScroll)
   	},
 	params: [
-     	{ name: "Data Link", label: "Link to data CSV (fixed for demo)", type: "text", default: "cars.csv"}
-	],
-    prefillParams(pm) {
-      let {node} = pm.selection
-      if (node && node.type == this)
-        return [node.attrs.data]
-    }
+     	{ name: "Data Link", label: "Link to data CSV (fixed for demo)", type: "text", default: "cars.csv", 
+  	      prefill: function(pm) { return selectedNodeAttr(pm, this, "data") }}
+	]
 })
 
 defParamsClick(SpreadSheet,"schema:spreadsheet:insertSpreadSheet")

@@ -1,6 +1,6 @@
 import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
 
 export class TextArea extends Block {
 	get attrs() {
@@ -28,15 +28,18 @@ TextArea.register("command", {
     	return pm.tr.replaceSelection(this.create({name,rows,cols})).apply(andScroll)
   	},
 	params: [
-	    getNameParam(),
-     	{ name: "Rows", label: "Rows in lines", type: "number", default: "4", options: {min: 1, max:20}},
-     	{ name: "Columns", label: "Columns in characters", type: "number", default: "40", options: {min: 1, max:80}}
-	],
-    prefillParams(pm) {
-	    let {node} = pm.selection
-	    if (node && node.type == this)
-	      return [node.attrs.name, node.attrs.rows, node.attrs.cols]
-	 }
+  	    { name: "Name", label: "Short ID", type: "text",
+     	  prefill: function(pm) { return selectedNodeAttr(pm, this, "name") },
+   		  options: {
+   			  pattern: namePattern, 
+   			  size: 10, 
+   			  title: nameTitle}},
+     	{ name: "Rows", label: "Rows in lines", type: "number", default: "4", options: {min: 1, max:20}, 
+		  prefill: function(pm) { return selectedNodeAttr(pm, this, "rows") }},
+     	{ name: "Columns", label: "Columns in characters", type: "number", default: "40", 
+		  prefill: function(pm) { return selectedNodeAttr(pm, this, "cols") },
+		  options: {min: 1, max:80}}
+	]
 }) 
 
 defParamsClick(TextArea,"schema:textarea:insertTextArea")

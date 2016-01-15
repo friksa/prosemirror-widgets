@@ -1,6 +1,6 @@
 import {Block, Paragraph, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, getNameParam} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
 
 export class Scale extends Block {
 	static get contains() { return "paragraph"}
@@ -56,18 +56,23 @@ Scale.register("command",{
     	return pm.tr.replaceSelection(this.create({name,title,startvalue,startlabel,endvalue,endlabel},para)).apply(andScroll)
   	},
 	params: [
-	    getNameParam(),
-	 	{ name: "Title", label: "Scale Title", type: "text"},
-     	{ label: "Start value", type: "number", default: 1},
-     	{ name: "Start Label", label: "Text on left", type: "text", default: "low"},
-     	{ label: "End value", type: "number", default: 10},
-     	{ name: "End Label", label: "Text on right", type: "text", default: "high"}
-	],
-    prefillParams(pm) {
-	    let {node} = pm.selection
-	    if (node && node.type == this)
-	      return [node.attrs.name, node.attrs.title, node.attrs.startvalue, node.attrs.startlabel, node.attrs.endvalue, node.attrs.endlabel]
-	}
+  	    { name: "Name", label: "Short ID", type: "text",
+     	  prefill: function(pm) { return selectedNodeAttr(pm, this, "name") },
+   		  options: {
+   			  pattern: namePattern, 
+   			  size: 10, 
+   			  title: nameTitle}},
+	 	{ name: "Title", label: "Scale Title", type: "text",
+	      prefill: function(pm) { return selectedNodeAttr(pm, this, "title") }},
+     	{ label: "Start value", type: "number", default: 1, 
+		  prefill: function(pm) { return selectedNodeAttr(pm, this, "startvalue") }},
+     	{ name: "Start Label", label: "Text on left", type: "text", default: "low",
+		  prefill: function(pm) { return selectedNodeAttr(pm, this, "startlabel") }},
+     	{ label: "End value", type: "number", default: 10,
+  	      prefill: function(pm) { return selectedNodeAttr(pm, this, "endvalue") }},
+     	{ name: "End Label", label: "Text on right", type: "text", default: "high", 
+  		  prefill: function(pm) { return selectedNodeAttr(pm, this, "endlabel") }}
+	]
 })
 
 defParamsClick(Scale,"schema:scale:insertScale")
