@@ -17,10 +17,7 @@ SpreadSheet.prototype.serializeDOM = node => {
 	if (node.rendered) {
 		node.rendered = node.rendered.cloneNode(true)
 	} else {
-		node.rendered = elt("div", {
-			id: "spreadsheet", 
-			class: "widgets-spreadsheet"
-		});
+		node.rendered = elt("div", { class: "widgets-spreadsheet widgets-edit"});
 		// wait until node is attached to document to render
 		window.setTimeout(function() {
 			let data = [
@@ -30,8 +27,7 @@ SpreadSheet.prototype.serializeDOM = node => {
 	            ["2016", 30, 15, 12, 13]
 	        ];
 	
-	        let container = document.getElementById('spreadsheet');
-	        let hot = new Handsontable(container, {
+	        new Handsontable(node.rendered, {
 	        	data: data,
 	            minSpareRows: 1,
 	            rowHeaders: true,
@@ -55,12 +51,11 @@ SpreadSheet.register("command", {
 	]
 })
 
-defParamsClick(SpreadSheet,"schema:spreadsheet:insertSpreadSheet")
+defParamsClick(SpreadSheet,"schema:spreadsheet:insertSpreadSheet",["all"])
 
 insertCSS(`
 
-.ProseMirror .widgets-spreadsheet:hover {
-	cursor: pointer;
+.ProseMirror .widgets-spreadsheet {
 }
 
 `)

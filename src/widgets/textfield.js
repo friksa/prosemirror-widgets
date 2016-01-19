@@ -9,7 +9,7 @@ export class TextField extends Input {
 			name: new Attribute,
 			type: new Attribute({default: "text"}),
 			size: new Attribute({default: "20"}),
-			class: new Attribute({default: "widgets-textfield"})
+			class: new Attribute({default: "widgets-textfield widgets-edit"})
 		}
 	}
 }
@@ -41,8 +41,9 @@ defParamsClick(TextField, "schema:textfield:insertTextField")
 
 insertCSS(`
 
-.ProseMirror .widgets-textfield:hover {
-	cursor: pointer
+.ProseMirror .widgets-textfield {
+	resize: horizontal;
+	overflow: auto;
 }
 
 `)

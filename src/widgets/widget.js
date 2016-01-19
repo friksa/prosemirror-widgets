@@ -1,12 +1,11 @@
-import {readParams} from "../../../../git/prosemirror/dist/menu/menu"
 import {Textblock} from "../../../../git/prosemirror/dist/model"
-import {elt} from "../../../../git/prosemirror/dist/dom"
+import {elt,insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defineCommand,defineParamHandler} from "../../../../git/prosemirror/dist/edit"
 import {widgetParamHandler} from "../utils"
 
-const inlineWidgets = ["Image", "TextField", "TextArea", "CheckBox", "Select", "CarryForward","IFrame", "InlineMath"] 
+const inlineWidgets = ["Image", "TextField", "CheckBox", "Select", "CarryForward","InlineMath"] 
 const insertInlineWidget = inlineWidgets.map(w => ({ value: "insert"+w, display: () => { return elt("span",null, w)} }))
-const blockWidgets = ["BlockMath", "SpreadSheet", "MultipleChoice", "Scale", "CheckList"]
+const blockWidgets = ["TextArea", "BlockMath", "IFrame", "SpreadSheet", "MultipleChoice", "Scale", "CheckList"]
 const insertBlockWidget = blockWidgets.map(w => ({ value: "insert"+w, display: () => { return elt("span",null, w)} }))
 
  
@@ -15,7 +14,9 @@ export class Widget extends Textblock {}
 defineCommand({
 	name: "insertInlineWidget",
 	label: "Insert Inline Widget",
-	select(pm) {return true},
+    select(pm) {
+		return pm.doc.path(pm.selection.from.path).type.contains == "inline"
+    },
 	params: [
 	     {name: "Widget type", type: "select", options: insertInlineWidget, defaultLabel: elt("img",{src: "icons/insert.png", width: "16px", height: "16px", alt:" Insert inline widget", title: "Insert inline widget"})}
 	],
@@ -32,7 +33,7 @@ defineCommand({
 defineCommand({
 	name: "insertBlockWidget",
 	label: "Insert Block Widget",
-	select(pm) {return true},
+	select(pm) {return pm.doc.path(pm.selection.from.path).type.contains == "inline"},
 	params: [
 	     {name: "Widget type", type: "select", options: insertBlockWidget, defaultLabel: elt("img",{src: "icons/insert.png", width: "16px", height: "16px", alt:" Insert block widget", title: "Insert block widget"})}
 	],
@@ -45,3 +46,15 @@ defineCommand({
 	display: { type: "param"},
 	menuGroup: "block(99)"
 })
+
+insertCSS(`
+
+.ProseMirror .widgets-edit:hover {
+	background-image: url('icons/edit45.png');
+	background-repeat: no-repeat;
+	background-position: top left;
+	cursor: pointer;
+ }
+
+
+`)

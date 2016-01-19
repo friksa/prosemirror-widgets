@@ -2,8 +2,6 @@ import {Block, Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
  
-let carryOptions = []
-
 function getCarryOptions(names) {
 	return names.map(w => ({value: w, label: w}))
 }
@@ -39,7 +37,7 @@ CarryForward.register("command", {
 	]
 })
 
-defParamsClick(CarryForward,"schema:carryforward:insertCarryForward")
+defParamsClick(CarryForward,"schema:carryforward:insertCarryForward",["all"])
 
 insertCSS(`
 

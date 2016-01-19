@@ -24,12 +24,6 @@ function paramDefault(param, pm, command) {
   return param.default
 }
 
-export function selectedNodeAttr(pm, type, name) {
-	  let {node} = pm.selection
-	  if (node && node.type == type) return node.attrs[name]
-	}
-
-
 function buildParamFields(pm, command) {
 	let fields = command.params.map((param, i) => {
 	    let field, name = "field_" + i
@@ -250,6 +244,8 @@ insertCSS(`
 
 .widgetButtons {
 	text-align: center;
+	display: inline-block;
+	white-space: nowrap;
 }
 
 .widgetButtons input {

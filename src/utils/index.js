@@ -1,21 +1,24 @@
 export {widgetParamHandler, defineFileHandler, namePattern, nameTitle, selectedNodeAttr} from "./params"
-import {readParams} from "../../../../git/prosemirror/dist/menu/menu"
-import {Pos} from "../../../../git/prosemirror/dist/model"
 import {selectableNodeAbove} from "../../../../git/prosemirror/dist/edit/selection"
-import {widgetParamHandler} from "../utils"
+import {widgetParamHandler} from "./params"
 
 export const andScroll = {scrollIntoView: true}
-	
-MathJax.Hub.Queue(function () {
-    MathJax.Hub.Config({
-    	tex2jax: {
-        	displayMath: [ ["\\[","\\]"] ], 
-        	inlineMath: [ ["\\(","\\)"] ],
-        	processEscapes: true
-    	},
-    	displayAlign:"left"
+
+let lastClicked = null;
+
+export function getLastClicked() { return lastClicked }
+
+if (window.MathJax)
+	MathJax.Hub.Queue(function () {
+	    MathJax.Hub.Config({
+	    	tex2jax: {
+	        	displayMath: [ ["\\[","\\]"] ], 
+	        	inlineMath: [ ["\\(","\\)"] ],
+	        	processEscapes: true
+	    	},
+	    	displayAlign:"left"
+		})
 	})
-})
 
 export function defParser(type,tag,cls) {
 	type.register("parseDOM", {
@@ -40,18 +43,27 @@ function selectClickedNode(pm, e) {
 	  }
 
 	  pm.setNodeSelection(pos)
-	  pm.focus()
 	  e.preventDefault()
+	  lastClicked = e.target
 	}
 
-export function defParamsClick(type, cmdname) {
+export function defParamsClick(type, cmdname, spots = ["topleft"]) {
 	type.prototype.handleClick = (pm, e, path, node) => {
-		let cmd = pm.commands[cmdname]
-		if (cmd) {
-			selectClickedNode(pm,e)
-			widgetParamHandler(pm,cmd)
-			return true;
-		} else
-			return false;
+		let spotClicked = false
+		spots.forEach(function check(loc) {
+			let r = e.target.getBoundingClientRect()
+			if (loc == "all") spotClicked = true;
+			else if (loc == "topleft") spotClicked = spotClicked || (e.clientX < (r.left+16) && e.clientY < (r.top+16))
+			else if (loc == "bottomright") spotClicked = spotClicked || (e.clientX > (r.right-32) && e.clientY > (r.bottom-32))			
+		})
+		if (spotClicked) {
+			let cmd = pm.commands[cmdname]
+			if (cmd) {
+				selectClickedNode(pm,e)
+				widgetParamHandler(pm,cmd)
+				return true;
+			} else
+				return false;
+		}
 	}
 }

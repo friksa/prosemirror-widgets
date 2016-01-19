@@ -8,6 +8,7 @@ export class InlineMath extends Inline {
 			tex: new Attribute
 		}
 	}
+	get contains() { return null }
 }
 
 defParser(InlineMath, "span", "widgets-inlinemath")
@@ -16,7 +17,7 @@ InlineMath.prototype.serializeDOM = node => {
 	if (node.rendered) {
 		node.rendered = node.rendered.cloneNode(true)
 	} else {
-		node.rendered = elt("span", {class: "widgets-inlinemath"}, " \\("+node.attrs.tex+"\\) ")
+		node.rendered = elt("span", {class: "widgets-inlinemath widgets-edit"}, " \\("+node.attrs.tex+"\\) ")
 		// wait until node is attached to document to render
 		MathJax.Hub.Queue(["Delay",MathJax.Callback,100],["Typeset",MathJax.Hub,node.rendered])
 	}
@@ -40,8 +41,6 @@ defParamsClick(InlineMath,"schema:inlinemath:insertInlineMath")
 
 insertCSS(`
 
-.ProseMirror .widgets-inlinemath {
-	cursor: pointer;	
-}
+.ProseMirror .widgets-inlinemath {}
 
 `)

@@ -3,6 +3,7 @@ import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser} from "../utils"
 
 export class Input extends Inline {
+	get contains() { return null}
 	get attrs() {
 		return {
 			name: new Attribute,
@@ -10,6 +11,7 @@ export class Input extends Inline {
 			value: new Attribute
 		}
 	}
+	get selectable() { return false}
 }
 
 defParser(Input,"widgets-input")

@@ -1,6 +1,6 @@
 import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr, getLastClicked} from "../utils"
 
 export class TextArea extends Block {
 	get attrs() {
@@ -8,18 +8,27 @@ export class TextArea extends Block {
 			name: new Attribute,
 			rows: new Attribute,
 			cols: new Attribute,
-			class: new Attribute({default: "widgets-textarea"})
+			class: new Attribute({default: "widgets-textarea widgets-edit"})
 		}
 	}
 	get contains() { return null }
 }
 
-TextArea.attributes = {
-}
-
 defParser(TextArea,"input","widgets-textarea")
 
-TextArea.prototype.serializeDOM = (node,s) => s.renderAs(node,"textarea",node.attrs)
+// if new then use default. If style has changed, textarea has been resized otherwise return the stored value
+/*function getDim(pm, dim) {
+	let dom = getLastClicked()
+	if (!dom) return 200
+	if (dom.style[dim].length > 2) return dom.style[dim].slice(0,dom.style[dim].length-2)
+}
+*/
+TextArea.prototype.serializeDOM = (node,s) => s.renderAs(node,"textarea",{
+	name: node.attrs.name,
+	rows: node.attrs.rows,
+	cols: node.attrs.cols,
+	class: "widgets-textarea widgets-edit"
+})
 
 TextArea.register("command", {
 	name: "insertTextArea",
@@ -29,16 +38,19 @@ TextArea.register("command", {
   	},
 	params: [
   	    { name: "Name", label: "Short ID", type: "text",
-     	  prefill: function(pm) { return selectedNodeAttr(pm, this, "name") },
+     	  prefill: function(pm) { return selectedNodeAttr(pm, this, "name")},
    		  options: {
    			  pattern: namePattern, 
    			  size: 10, 
-   			  title: nameTitle}},
-     	{ name: "Rows", label: "Rows in lines", type: "number", default: "4", options: {min: 1, max:20}, 
-		  prefill: function(pm) { return selectedNodeAttr(pm, this, "rows") }},
-     	{ name: "Columns", label: "Columns in characters", type: "number", default: "40", 
-		  prefill: function(pm) { return selectedNodeAttr(pm, this, "cols") },
-		  options: {min: 1, max:80}}
+   			  title: nameTitle
+   		  }},
+   		  { name: "Rows", label: "In lines lines", type: "number", default: "4", options: {min: 2, max:24}, 
+   			  prefill: function(pm) { return selectedNodeAttr(pm, this, "rows") }
+   		  },
+   	      { name: "Columns", label: "In characters", type: "number", default: "40", 
+   			  prefill: function(pm) { return selectedNodeAttr(pm, this, "cols") },
+   			  options: {min: 2, max:80}
+   		  }
 	]
 }) 
 
@@ -46,8 +58,8 @@ defParamsClick(TextArea,"schema:textarea:insertTextArea")
 
 insertCSS(`
 
-.ProseMirror .widgets-textarea:hover {
-	cursor: pointer
+.ProseMirror .widgets-textarea {
+	resize: none;
 }
 
 `)

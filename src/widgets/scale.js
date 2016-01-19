@@ -16,10 +16,10 @@ export class Scale extends Block {
 	}
 }
 
-defParser(Scale,"div","scale")
+defParser(Scale,"div","widgets-scale")
 
 Scale.prototype.serializeDOM = (node,s) => {
-	let dom = s.renderAs(node,"div",{class: "widgets-scale", title: node.attrs.title, contenteditable: false})
+	let dom = s.renderAs(node,"div",{class: "widgets-scale widgets-edit", title: node.attrs.title, contenteditable: false})
 	let para = elt("p")
 	dom.appendChild(para)
 	para.appendChild(elt("span", null, node.attrs.startlabel+" "))
@@ -101,8 +101,6 @@ insertCSS(`
 	font-weight: normal;
 }
 
-.ProseMirror .widgets-scale:hover {
-	cursor: pointer;
-}
+.ProseMirror .widgets-scale:hover {}
 
 `)

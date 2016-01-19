@@ -20,7 +20,7 @@ IFrame.prototype.serializeDOM = (node, s) => s.renderAs(node, "iframe",{
 	width: node.attrs.width,
 	height: node.attrs.height,
 	content: "text/html;charset=UTF-8",
-	class: "iframe",
+	class: "widgets-iframe widgets-edit",
 	frameborder: "1",
 	allowfullscreen: "1"
 })
@@ -32,7 +32,7 @@ IFrame.register("command", {
     	return pm.tr.replaceSelection(this.create({src, width, height})).apply(andScroll)
   	},
 	params: [
-     	{ name: "URL", label: "Link to website, youTube, Google Maps ...", type: "url", 
+     	{ name: "URL", label: "Link to website, youTube, Google Maps ...", type: "url", default:"http://www.iastate.edu",
        	  prefill: function(pm) { return selectedNodeAttr(pm, this, "src") }},
      	{ name: "Width", label: "Width in pixels", type: "number", default: 200, 
           prefill: function(pm) { return selectedNodeAttr(pm, this, "width") },
@@ -48,7 +48,8 @@ defParamsClick(IFrame,"schema:iframe:insertIFrame")
 insertCSS(`
 
 .ProseMirror .widgets-iframe:hover {
-	cursor: pointer;
+	padding-left: 16px;
+    padding-top: 16px;
 }
 
 `)

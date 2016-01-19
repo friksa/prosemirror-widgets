@@ -4,6 +4,7 @@ import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNo
 
 export class Choice extends Block {
 	static get kinds() { return "choice" }
+	get isTextblock() { return true }
 	get attrs() {
 		return {
 			name: new Attribute(),
@@ -12,8 +13,9 @@ export class Choice extends Block {
 		}
 	}
 	create(attrs, content, marks) {
-		let children = [this.schema.node("radiobutton",attrs)]
-		return super.create(attrs,children,marks)
+		// if content not null then it is a fragment with paragraph as first child
+		let para = content? content.firstChild: pm.schema.defaultTextblockType().create(null)
+		return super.create(attrs,[this.schema.node("radiobutton",attrs),para],marks)
 	}
 }
  
@@ -23,7 +25,7 @@ export class MultipleChoice extends Block {
 		return {
 			name: new Attribute,
 			title: new Attribute,
-			class: new Attribute({default: "widgets-multiplechoice"})
+			class: new Attribute({default: "widgets-multiplechoice widgets-edit"})
 		}
 	}
 	get isList() { return true }
@@ -36,14 +38,26 @@ Choice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",node.attrs)
 
 MultipleChoice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",node.attrs)
 
+function renumber(pm, node) {
+	let i = 1
+	node.forEach(ch => {
+		let radio = ch.firstChild
+		if (radio) radio.attrs.value = i++
+	})
+}
+
 Choice.register("command", {
   name: "splitChoice",
   label: "Split the current choice",
   run(pm) {
     let {from, to, node} = pm.selection
     if ((node && node.isBlock) || from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
-    let toParent = from.shorten(), mc = pm.doc.path(toParent.path)
-    return pm.tr.delete(from, to).split(from, 1, this, {name: mc.attrs.name, value: mc.size}).apply(andScroll)
+    let toParent = from.shorten(), parent = pm.doc.path(toParent.path)
+    if (parent.type != this) return false
+    //let toMC = toParent.shorten(), mc = pm.doc.path(toMC.path)
+    let nextType = to.offset == parent.child(toParent.offset).size ? pm.schema.defaultTextblockType() : null
+    // need to renumber nodes and move cursor
+    return pm.tr.delete(from, to).split(from, 2, nextType).apply(andScroll)
   },
   keys: ["Enter(19)"]
 })
@@ -52,19 +66,8 @@ Choice.register("command", {
   name: "deleteChoice",
   label: "delete this choice or multiplechoice",
   run(pm) {
-	let {from, to} = pm.selection
-    if (from.offset > 0) return false
-    let mc = pm.doc.path(from.path)
-    //if top choice, delete whole question if only one choice
-    if (mc.type.name == "choice") {
-    	return pm.tr.delete(cut, cut.move(1)).apply()
-    } else {
-    	// don't delete question if more than one choice
-    	if (mc.size == 1) {
-     		return pm.tr.delete(cut,cut.move(1)).apply()
-    	} else
-    		return false;
-    }
+	let {from,to} = pm.selection
+    return pm.tr.delete(from.move(-1),to).apply(andScroll)
   },
   keys: ["Backspace(20)", "Mod-Backspace(20)"]
 })
@@ -73,14 +76,14 @@ MultipleChoice.register("command",{
 	name: "insertMultipleChoice",
 	label: "MultipleChoice",
 	run(pm, name, title) {
-    	let {node, from, to} = pm.selection
-    	let mc = this.create({name, title}, node? node.content: pm.schema.node("choice",{name, value: 0}))
+    	let mc = this.create({name, title}, pm.schema.node("choice",{name, value: 0}))
    		let tr = pm.tr.replaceSelection(mc).apply(andScroll)
-   		// need to move to newly added node
   		return tr
+   		// need to move to newly added node
 	},
 	select(pm) {
-		return pm.doc.path(pm.selection.from.path).type.canContainType(this)
+		return true
+		//return pm.doc.path(pm.selection.from.path).type.canContainType(this)
 	},
 	params: [
  	    { name: "Name", label: "Short ID", type: "text",
@@ -106,11 +109,6 @@ div.widgets-choice:first-child input {
 	display: none;
 }
 
-.widgets-choice:nth-child(n+1) span {
-	display: inline-block;
-	margin-left: 10px;
-}
-
 .widgets-multiplechoice:before {
 	content: attr(title);
 	color: black;
@@ -122,7 +120,6 @@ div.widgets-choice:first-child input {
 	cursor: text;
 }
 
-.ProseMirror .widgets-multiplechoice:hover {
-	cursor: pointer;
-}
+.ProseMirror .widgets-multiplechoice {}
+
 `)

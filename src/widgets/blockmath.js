@@ -17,7 +17,7 @@ BlockMath.prototype.serializeDOM = node => {
 	if (node.rendered) {
 		node.rendered = node.rendered.cloneNode(true)
 	} else {
-		node.rendered = elt("div", {class: "widgets-blockmath"}, "\\["+node.attrs.tex+"\\]");
+		node.rendered = elt("div", {class: "widgets-blockmath widgets-edit"}, "\\["+node.attrs.tex+"\\]");
 		// wait until node is attached to document to render
 		MathJax.Hub.Queue(["Delay",MathJax.Callback,100],["Typeset",MathJax.Hub,node.rendered])
 	}
@@ -40,8 +40,6 @@ defParamsClick(BlockMath,"schema:blockmath:insertBlockMath")
 
 insertCSS(`
 
-.ProseMirror .widgets-blockmath:hover {
-	cursor: pointer;
-}
+.ProseMirror .widgets-blockmath {}
 
 `)

@@ -8,7 +8,7 @@ export class Image extends Inline {
 			src: new Attribute,
 			alt: new Attribute,
 			title: new Attribute,
-			class: new Attribute({default: "widgets-img"})
+			class: new Attribute({default: "widgets-img widgets-edit"})
 		}
 	}
 }
@@ -36,12 +36,10 @@ Image.register("command", {
   }
 })
 
-defParamsClick(Image,"schema:image:insertImage")
+defParamsClick(Image,"schema:image:insertImage",["all"])
 
 insertCSS(`
 
-.ProseMirror .widgets-img:hover {
-	cursor: pointer;
-}
+.ProseMirror .widgets-img {}
 
 `)

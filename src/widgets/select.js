@@ -1,8 +1,9 @@
 import {Block, Inline, Attribute} from "../../../../git/prosemirror/dist/model"
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, namePattern, nameTitle, selectedNodeAttr} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
 
 export class Select extends Inline {
+	get contains() { return null}
 	get attrs() {
 		return {
 			name: new Attribute,
@@ -16,7 +17,7 @@ defParser(Select,"select","widgets-select")
 
 Select.prototype.serializeDOM = node => {
 	let selection = node.attrs.multiple == "multiple"
-	let select = elt("select",{name: node.attrs.name, class: "widgets-select", size: 1, multiple: selection})
+	let select = elt("select",{name: node.attrs.name, class: "widgets-select widgets-edit", size: 1, multiple: selection})
 	node.attrs.options.split(",").map(function(option) {
 		select.appendChild(elt("option", {value: option.trim()}, option))
 	})
@@ -51,8 +52,6 @@ defParamsClick(Select,"schema:select:insertSelect")
 
 insertCSS(`
 
-.ProseMirror .widgets-select:hover {
-	cursor: pointer;
-}
+.ProseMirror .widgets-select {}
 
 `)

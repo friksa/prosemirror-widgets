@@ -2,18 +2,20 @@ import {Block, Paragraph, Attribute, Pos} from "../../../../git/prosemirror/dist
 import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
 
-export class CheckItem extends Paragraph {
-	static get kind() { return "." }
+export class CheckItem extends Block {
+	static get kinds() { return "checkitem" }
+	get isTextblock() { return true }
 	get attrs() {
 		return {
 			name: new Attribute,
-			value: new Attribute
+			value: new Attribute,
+			class: new Attribute({default: "widgets-checkitem"})
 		}
 	}
-
 	create(attrs, content, marks) {
-		if (attrs.value > 0) content = [this.schema.node("checkbox",attrs)]
-		return super.create(attrs, content, marks)
+		// if content not null then it is a fragment with paragraph as first child
+		let para = content? content = content.firstChild: pm.schema.defaultTextblockType().create(null)
+		return super.create(attrs,[this.schema.node("checkbox",attrs),para],marks)
 	}
 }
 
@@ -23,50 +25,57 @@ export class CheckList extends Block {
 		return {
 			name: new Attribute,
 			title: new Attribute,
-			layout: new Attribute({default: "vertical"})
+			layout: new Attribute({default: "vertical"}),
+			class: new Attribute({default: "widgets-checklist widgets-edit"})
 		}
 	}
+	get isList() { return true }
 }
 
 defParser(CheckItem,"div","widgets-checkitem")
 defParser(CheckList,"div","widgets-checklist")
 
-CheckItem.prototype.serializeDOM = (node,s) => s.renderAs(node,"p", {
-	name: node.attrs.name+"-"+node.attrs.value, 
-	value: node.attrs.value,
-	class: "widgets-checkitem"
-})
+CheckItem.prototype.serializeDOM = (node,s) => s.renderAs(node,"div", node.attrs)
 
-CheckList.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",{
-	name: node.attrs.name,
-	title: node.attrs.title,
-	layout: node.attrs.layout,
-	class: "widgets-checklist"
-})
+CheckList.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",node.attrs)
 
 CheckItem.register("command", {
 	  name: "splitCheckitem",
 	  label: "Split the current checkitem",
 	  run(pm) {
-	    let {node, from, to} = pm.selection
+	    let {from, to, node} = pm.selection
 	    if ((node && node.isBlock) || from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
-	    let toParent = from.shorten(), grandParent = pm.doc.path(toParent.path)
-	    if (grandParent.type == CheckList)
-	    	return pm.tr.delete(from, to).split(from, 1, pm.schema.nodes.checkitem, {name: grandParent.attrs.name, value: grandParent.size}).apply(andScroll)
+	    let toParent = from.shorten(), parent = pm.doc.path(toParent.path)
+	    if (parent.type != this) return false
+	    let nextType = to.offset == parent.child(toParent.offset).size ? pm.schema.defaultTextblockType() : null
+	    // need to renumber nodes and move cursor
+	    return pm.tr.delete(from, to).split(from, 2, nextType).apply(andScroll)
 	  },
-	  keys: ["Enter(50)"]
+	  keys: ["Enter(19)"]
 	})
 
+
+CheckItem.register("command", {
+  name: "deleteCheckItem",
+  label: "delete this checkitem or checklist",
+  run(pm) {
+	let {from,to} = pm.selection
+    return pm.tr.delete(from.move(-1),to).apply(andScroll)
+  },
+  keys: ["Backspace(50)", "Mod-Backspace(50)"]
+})
 
 CheckList.register("command", {
 	name: "insertCheckList",
 	label: "CheckList",
 	run(pm, name, title, layout) {
-		let {node} = pm.selection
-		let chklist = this.create({name: name, title: title, layout:layout},node? node.content:
-			pm.schema.nodes.checkitem.create({name:name, value: 0}))                                    
-		return pm.tr.replaceSelection(chklist).apply(andScroll)
+		let cl = this.create({name, title, layout}, pm.schema.node("checkitem",{name, value: 0}))
+		let tr = pm.tr.replaceSelection(cl).apply(andScroll)
+		return tr
   	},
+	select(pm) {
+		return pm.doc.path(pm.selection.from.path).type.canContainType(this)
+	},
 	params: [
  	    { name: "Name", label: "Short ID", type: "text",
    	  	  prefill: function(pm) { return selectedNodeAttr(pm, this, "name") },
@@ -77,7 +86,7 @@ CheckList.register("command", {
 	    { name: "Title", label: "Title", type: "text",
 	      prefill: function(pm) { return selectedNodeAttr(pm, this, "title") }},
 	    { name: "Layout", label: "vertical or horizontal", type: "select",
-	      prefill: function(pm) { return selectedNodeAttr(pm, this, "tex") },
+	      prefill: function(pm) { return selectedNodeAttr(pm, this, "layout") },
 	      options: [
      	      {value: "horizontal", label: "horizontal"},
      	      {value: "vertical", label: "vertical"}
@@ -85,62 +94,29 @@ CheckList.register("command", {
 	]
 })
 
-CheckItem.register("command", {
-  name: "splitCheckItem",
-  label: "Split the current checkitem",
-  run(pm) {
-    let {node, from, to} = pm.selection
-    if ((node && node.isBlock) || from.path.length < 2 || !Pos.samePath(from.path, to.path)) return false
-    let toParent = from.shorten(), grandParent = pm.doc.path(toParent.path)
-    return pm.tr.delete(from, to).split(from, 1, pm.schema.nodes.checkitem, {
-    	name: grandParent.attrs.name+"-"+grandParent.size, 
-    	value: grandParent.size}).apply(andScroll)
-  },
-  keys: ["Enter(50)"]
-})
-
-CheckItem.register("command", {
-  name: "deleteCheckItem",
-  label: "delete this checkitem or checklist",
-  run(pm) {
-    let {head, empty} = pm.selection
-    if (!empty || head.offset > 1) return false
-    // Find the node before this one
-    let before, cut
-    for (let i = head.path.length - 1; !before && i >= 0; i--) if (head.path[i] > 0) {
-      cut = head.shorten(i)
-      before = pm.doc.path(cut.path).child(cut.offset - 1)
-    }
-	let mc = pm.doc.path(cut.path).child(cut.offset)
-    // if top choice, delete whole question if only one choice
-    if (mc.type.name == "checkitem") {
-    	return pm.tr.delete(cut, cut.move(1)).apply(andScroll)
-    } else {
-    	// don't delete question if more than one choice
-    	if (mc.size == 1) {
-     		return pm.tr.delete(cut,cut.move(1)).apply(andScroll)
-    	} else
-    		return false;
-    }
-  },
-  keys: ["Backspace(50)", "Mod-Backspace(50)"]
-})
-
 defParamsClick(CheckList,"schema:checklist:insertCheckList")
 
 insertCSS(`
 
 .ProseMirror .widgets-checkitem {
+	float: left;
+}
+
+div.widgets-checkitem:first-child input {
+	display: none;
+}
+
+.ProseMirror .widgets-checkitem:hover {
 	cursor: text;
 }
 
 .widgets-checklist:before {
 	content: attr(title);
 	color: black;
+	font-size: 14px;
 	font-weight: bold;
 }
 
-.ProseMirror .widgets-checklist:hover {
-	cursor: pointer;
-}
+.ProseMirror .widgets-checklist {}
+
 `)

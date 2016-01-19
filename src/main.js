@@ -58,13 +58,13 @@ const widgetSchema = new Schema(widgetSpec)
 let pm = window.pm = new ProseMirror({
   place: document.querySelector("#editor"),
   menuBar: true,
-  doc: document.querySelector("#content").innerHTML,
-  docFormat: "html",
+  autoInput: true,
+  doc: document.querySelector("#content"),
+  docFormat: "dom",
   schema: widgetSchema,
-  commandParamHandler: "widgetParamHandler",
-  autoInput: true
+  commandParamHandler: "widgetParamHandler"
 })
-
+	
 defineFileHandler(function(files) {
 	console.log(files)
 })
