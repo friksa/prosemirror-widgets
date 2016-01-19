@@ -11,7 +11,9 @@ export class RadioButton extends Input {
 			value: new Attribute,
 			class: new Attribute({default: "widgets-radiobutton"})
 		}
-	}	
+	}
+	get selectable() { return true}
+	get contains() { return null}
 }
 
 defParser(RadioButton,"input","widgets-radiobutton")

@@ -12,11 +12,13 @@ export class TextField extends Input {
 			class: new Attribute({default: "widgets-textfield widgets-edit"})
 		}
 	}
+	get contains() { return null }
 }
 
 defParser(TextField,"input","widgets-textfield")
 
-// serializer inherits from input
+TextField.prototype.serializeDOM = (node,s) => s.renderAs(node,"input",node.attrs)
+
 
 TextField.register("command", {
 	name: "insertTextField",

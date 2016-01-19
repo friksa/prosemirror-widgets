@@ -11,7 +11,6 @@ export class Input extends Inline {
 			value: new Attribute
 		}
 	}
-	get selectable() { return false}
 }
 
 defParser(Input,"widgets-input")

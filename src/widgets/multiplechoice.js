@@ -92,7 +92,7 @@ MultipleChoice.register("command",{
  			  pattern: namePattern, 
  			  size: 10, 
  			  title: nameTitle}},
-	 	{ name: "Title", label: "Description", type: "text", default:"Test Title", 
+	 	{ name: "Title", label: "Description", type: "text", 
 	      prefill: function(pm) { return selectedNodeAttr(pm, this, "title") }}
 	]
 })
