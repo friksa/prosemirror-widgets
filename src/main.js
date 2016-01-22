@@ -9,9 +9,9 @@ import {Doc, Textblock, BlockQuote, OrderedList, BulletList, ListItem, Horizonta
 	Paragraph, Heading, Text, HardBreak,
 	EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../../git/prosemirror/dist/model"
 
-import {Input, TextField, TextArea, CheckBox, RadioButton, Select, 
-	IFrame, InlineMath, BlockMath, Image, SpreadSheet,CarryForward,
-	Choice, MultipleChoice, Scale, CheckItem, CheckList, Widget} from "./widgets"
+import {Input, Content, Answers, ShortAnswer, Essay, CheckBox, RadioButton, Select, 
+	Website, InlineMath, BlockMath, Image, SpreadSheet, CarryForward,
+	Choice, ChoiceList, Scale, CheckItem, CheckList} from "./widgets"
 
 
 const widgetSpec = new SchemaSpec({
@@ -30,22 +30,23 @@ const widgetSpec = new SchemaSpec({
 	hard_break: HardBreak,
 	
 	input: Input,
-	textfield: TextField,
-	textarea: TextArea,
+	content: Content,
+	answers: Answers,
+	shortanswer: ShortAnswer,
+	essay: Essay,
 	checkbox: CheckBox,
 	radiobutton: RadioButton,
 	select: Select,
 	inlinemath: InlineMath,
 	blockmath: BlockMath,
-	iframe: IFrame,
+	website: Website,
 	carryforward: CarryForward,
 	choice: Choice,
-	multiplechoice: MultipleChoice,
+	choicelist: ChoiceList,
 	scale: Scale,
 	checkitem: CheckItem,
 	checklist: CheckList,
-	spreadsheet: SpreadSheet,
-	widget: Widget
+	spreadsheet: SpreadSheet
 }, {
 	em: EmMark,
 	strong: StrongMark,
@@ -57,14 +58,16 @@ const widgetSchema = new Schema(widgetSpec)
 
 let pm = window.pm = new ProseMirror({
   place: document.querySelector("#editor"),
-  menuBar: true,
+  menuBar: {
+	float: true,
+	groups: ["inline", "block", "insert", "history"]
+  },
   autoInput: true,
   doc: document.querySelector("#content"),
   docFormat: "dom",
-  schema: widgetSchema,
-  commandParamHandler: "widgetParamHandler"
+  schema: widgetSchema
 })
-	
+
 defineFileHandler(function(files) {
 	console.log(files)
 })

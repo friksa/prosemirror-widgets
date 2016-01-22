@@ -39,8 +39,7 @@ SpreadSheet.prototype.serializeDOM = node => {
 	return node.rendered; 
 }
 
-SpreadSheet.register("command", {
-	name: "insertSpreadSheet",
+SpreadSheet.register("command", "insert", {
 	label: "SpreadSheet",
 	run(pm, data) {
     	return pm.tr.replaceSelection(this.create({data})).apply(andScroll)
@@ -51,7 +50,7 @@ SpreadSheet.register("command", {
 	]
 })
 
-defParamsClick(SpreadSheet,"schema:spreadsheet:insertSpreadSheet",["all"])
+defParamsClick(SpreadSheet,"spreadsheet:insert",["all"])
 
 insertCSS(`
 

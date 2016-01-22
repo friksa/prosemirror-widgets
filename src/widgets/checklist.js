@@ -39,8 +39,7 @@ CheckItem.prototype.serializeDOM = (node,s) => s.renderAs(node,"div", node.attrs
 
 CheckList.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",node.attrs)
 
-CheckItem.register("command", {
-	  name: "splitCheckitem",
+CheckItem.register("command", "split", {
 	  label: "Split the current checkitem",
 	  run(pm) {
 	    let {from, to, node} = pm.selection
@@ -55,26 +54,25 @@ CheckItem.register("command", {
 	})
 
 
-CheckItem.register("command", {
-  name: "deleteCheckItem",
-  label: "delete this checkitem or checklist",
-  run(pm) {
-	let {from,to} = pm.selection
-    return pm.tr.delete(from.move(-1),to).apply(andScroll)
-  },
-  keys: ["Backspace(50)", "Mod-Backspace(50)"]
+CheckItem.register("command", "delete",{
+	label: "delete this checkitem or checklist",
+	run(pm) {
+		let {from,to} = pm.selection
+	    return pm.tr.delete(from.move(-1),to).apply(andScroll)
+	},
+	keys: ["Backspace(50)", "Mod-Backspace(50)"]
 })
 
-CheckList.register("command", {
-	name: "insertCheckList",
-	label: "CheckList",
+CheckList.register("command", "insert", {
+	label: "Check List",
 	run(pm, name, title, layout) {
-		let cl = this.create({name, title, layout}, pm.schema.node("checkitem",{name, value: 0}))
+		let cl = this.create({name, title, layout}, pm.schema.node("checkitem",{name, value: 1}))
 		let tr = pm.tr.replaceSelection(cl).apply(andScroll)
 		return tr
   	},
 	select(pm) {
-		return pm.doc.path(pm.selection.from.path).type.canContainType(this)
+  		return true
+		//return pm.doc.path(pm.selection.from.path).type.canContainType(this)
 	},
 	params: [
  	    { name: "Name", label: "Short ID", type: "text",
@@ -94,7 +92,7 @@ CheckList.register("command", {
 	]
 })
 
-defParamsClick(CheckList,"schema:checklist:insertCheckList")
+defParamsClick(CheckList,"checklist:insert")
 
 insertCSS(`
 

@@ -24,8 +24,7 @@ Select.prototype.serializeDOM = node => {
 	return select
 }
 
-Select.register("command", {
-	name: "insertSelect",
+Select.register("command", "insert", {
 	label: "Select",
 	run(pm, name, options, multiple) {
     	return pm.tr.replaceSelection(this.create({name,options,multiple})).apply(andScroll)
@@ -48,7 +47,7 @@ Select.register("command", {
 	]
 })
 
-defParamsClick(Select,"schema:select:insertSelect")
+defParamsClick(Select,"select:insert")
 
 insertCSS(`
 

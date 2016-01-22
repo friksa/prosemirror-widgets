@@ -19,8 +19,7 @@ defParser(CheckBox,"input","widgets-checkbox")
 
 CheckBox.prototype.serializeDOM = (node,s) => s.renderAs(node,"input",node.attrs)
 
-CheckBox.register("command", {
-	name: "insertCheckBox",
+CheckBox.register("command", "insert",{
 	label: "CheckBox",
 	run(pm, name) {
     	return pm.tr.replaceSelection(this.create({name})).apply(andScroll)
@@ -36,7 +35,7 @@ CheckBox.register("command", {
    	]
 })
 
-defParamsClick(CheckBox,"schema:checkbox:insertCheckBox",["all"])
+defParamsClick(CheckBox,"checkbox:insert",["all"])
 
 insertCSS(`
 

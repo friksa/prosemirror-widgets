@@ -48,8 +48,7 @@ Scale.prototype.serializeDOM = (node,s) => {
 	return dom
 }
 
-Scale.register("command",{
-	name: "insertScale",
+Scale.register("command", "insert",{
 	label: "Scale",
 	run(pm, name, title, startvalue, startlabel, endvalue, endlabel) {
 		let para = pm.schema.node("paragraph")
@@ -75,7 +74,7 @@ Scale.register("command",{
 	]
 })
 
-defParamsClick(Scale,"schema:scale:insertScale")
+defParamsClick(Scale,"scale:insert")
 
 insertCSS(`
 

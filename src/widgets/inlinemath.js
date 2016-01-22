@@ -25,8 +25,7 @@ InlineMath.prototype.serializeDOM = node => {
 }
 
 
-InlineMath.register("command", {
-	name: "insertInlineMath",
+InlineMath.register("command", "insert", {
 	label: "InlineMath",
 	run(pm, tex) {
     	return pm.tr.replaceSelection(this.create({tex})).apply(andScroll)
@@ -37,7 +36,7 @@ InlineMath.register("command", {
 	],
 })
 
-defParamsClick(InlineMath,"schema:inlinemath:insertInlineMath")
+defParamsClick(InlineMath,"inlinemath:insert")
 
 insertCSS(`
 

@@ -24,8 +24,7 @@ BlockMath.prototype.serializeDOM = node => {
 	return node.rendered; 
 }
 
-BlockMath.register("command", {
-	name: "insertBlockMath",
+BlockMath.register("command", "insert", {
 	label: "BlockMath",
 	run(pm, tex) {
     	return pm.tr.replaceSelection(this.create({tex})).apply(andScroll)
@@ -36,7 +35,7 @@ BlockMath.register("command", {
 	]
 })
 
-defParamsClick(BlockMath,"schema:blockmath:insertBlockMath")
+defParamsClick(BlockMath,"blockmath:insert")
 
 insertCSS(`
 

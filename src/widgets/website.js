@@ -2,7 +2,7 @@ import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
 import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, selectedNodeAttr} from "../utils"
 
-export class IFrame extends Block {
+export class Website extends Block {
 	get attrs() {
 		return {
 			src: new Attribute,
@@ -13,21 +13,20 @@ export class IFrame extends Block {
 	get contains() { return null }
 }
 
-defParser(IFrame, "iframe", "widgets-iframe")
+defParser(Website, "website", "widgets-website")
 
-IFrame.prototype.serializeDOM = (node, s) => s.renderAs(node, "iframe",{ 
+Website.prototype.serializeDOM = (node, s) => s.renderAs(node, "iframe",{ 
 	src: node.attrs.src,
 	width: node.attrs.width,
 	height: node.attrs.height,
 	content: "text/html;charset=UTF-8",
-	class: "widgets-iframe widgets-edit",
+	class: "widgets-website widgets-edit",
 	frameborder: "1",
 	allowfullscreen: "1"
 })
 
-IFrame.register("command", {
-	name: "insertIFrame",
-	label: "IFrame",
+Website.register("command", "insert", {
+	label: "Website",
 	run(pm, src, width, height) {
     	return pm.tr.replaceSelection(this.create({src, width, height})).apply(andScroll)
   	},
@@ -43,11 +42,11 @@ IFrame.register("command", {
 	]
 })
 
-defParamsClick(IFrame,"schema:iframe:insertIFrame")
+defParamsClick(Website,"website:insert")
 
 insertCSS(`
 
-.ProseMirror .widgets-iframe:hover {
+.ProseMirror .widgets-website:hover {
 	padding-left: 16px;
     padding-top: 16px;
 }

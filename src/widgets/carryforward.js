@@ -24,8 +24,7 @@ CarryForward.prototype.serializeDOM = node => {
 	)
 }
 
-CarryForward.register("command", {
-	name: "insertCarryForward",
+CarryForward.register("command", "insert", {
 	label: "CarryForward",
 	run(pm, name) {
     	return pm.tr.replaceSelection(this.create({name})).apply(andScroll)
@@ -37,7 +36,7 @@ CarryForward.register("command", {
 	]
 })
 
-defParamsClick(CarryForward,"schema:carryforward:insertCarryForward",["all"])
+defParamsClick(CarryForward,"carryforward:insert",["all"])
 
 insertCSS(`
 

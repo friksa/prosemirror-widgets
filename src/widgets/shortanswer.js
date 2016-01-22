@@ -3,26 +3,25 @@ import {insertCSS} from "../../../../git/prosemirror/dist/dom"
 import {Input} from "./input"
 import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
 
-export class TextField extends Input {
+export class ShortAnswer extends Input {
 	get attrs() {
 		return {
 			name: new Attribute,
 			type: new Attribute({default: "text"}),
 			size: new Attribute({default: "20"}),
-			class: new Attribute({default: "widgets-textfield widgets-edit"})
+			class: new Attribute({default: "widgets-shortanswer widgets-edit"})
 		}
 	}
 	get contains() { return null }
 }
 
-defParser(TextField,"input","widgets-textfield")
+defParser(ShortAnswer,"input","widgets-shortanswer")
 
-TextField.prototype.serializeDOM = (node,s) => s.renderAs(node,"input",node.attrs)
+ShortAnswer.prototype.serializeDOM = (node,s) => s.renderAs(node,"input",node.attrs)
 
 
-TextField.register("command", {
-	name: "insertTextField",
-	label: "TextField",
+ShortAnswer.register("command", "insert", {
+	label: "ShortAnswer",
 	run(pm, name, size) {
     	return pm.tr.replaceSelection(this.create({name,size})).apply(andScroll)
   	},
@@ -39,11 +38,11 @@ TextField.register("command", {
 	]
 })
 
-defParamsClick(TextField, "schema:textfield:insertTextField")
+defParamsClick(ShortAnswer, "shortanswer:insert")
 
 insertCSS(`
 
-.ProseMirror .widgets-textfield {
+.ProseMirror .widgets-shortanswer {
 	resize: horizontal;
 	overflow: auto;
 }

@@ -17,8 +17,7 @@ defParser(Image, "img", "widgets-img")
 
 Image.prototype.serializeDOM = (node, s) => s.renderAs(node, "img", node.attrs)
 
-Image.register("command", {
-  name: "insertImage",
+Image.register("command", "insert", {
   label: "Image",
   run(pm, src, alt, title) {
     return pm.tr.replaceSelection(this.create({src, title, alt})).apply(andScroll)
@@ -36,7 +35,7 @@ Image.register("command", {
   }
 })
 
-defParamsClick(Image,"schema:image:insertImage",["all"])
+defParamsClick(Image,"image:insert",["all"])
 
 insertCSS(`
 

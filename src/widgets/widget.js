@@ -5,14 +5,13 @@ import {widgetParamHandler} from "../utils"
 
 const inlineWidgets = ["Image", "TextField", "CheckBox", "Select", "CarryForward","InlineMath"] 
 const insertInlineWidget = inlineWidgets.map(w => ({ value: "insert"+w, display: () => { return elt("span",null, w)} }))
-const blockWidgets = ["TextArea", "BlockMath", "IFrame", "SpreadSheet", "MultipleChoice", "Scale", "CheckList"]
+const blockWidgets = ["TextArea", "BlockMath", "IFrame", "SpreadSheet", "ChoiceList", "Scale", "CheckList"]
 const insertBlockWidget = blockWidgets.map(w => ({ value: "insert"+w, display: () => { return elt("span",null, w)} }))
 
  
 export class Widget extends Textblock {}
  
-defineCommand({
-	name: "insertInlineWidget",
+/*Widget.register("command","insert",{
 	label: "Insert Inline Widget",
     select(pm) {
 		return pm.doc.path(pm.selection.from.path).type.contains == "inline"
@@ -30,8 +29,7 @@ defineCommand({
 	menuGroup: "inline(99)"
 })
 
-defineCommand({
-	name: "insertBlockWidget",
+Widget.register("command","insert",{
 	label: "Insert Block Widget",
 	select(pm) {return pm.doc.path(pm.selection.from.path).type.contains == "inline"},
 	params: [
@@ -46,15 +44,6 @@ defineCommand({
 	display: { type: "param"},
 	menuGroup: "block(99)"
 })
-
-insertCSS(`
-
-.ProseMirror .widgets-edit:hover {
-	background-image: url('icons/edit45.png');
-	background-repeat: no-repeat;
-	background-position: top left;
-	cursor: pointer;
- }
+*/
 
 
-`)

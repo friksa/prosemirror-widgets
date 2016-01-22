@@ -19,25 +19,25 @@ export class Choice extends Block {
 	}
 }
  
-export class MultipleChoice extends Block {
+export class ChoiceList extends Block {
 	static get contains() { return "choice"}
 	get attrs() {
 		return {
 			name: new Attribute,
 			title: new Attribute,
-			class: new Attribute({default: "widgets-multiplechoice widgets-edit"})
+			class: new Attribute({default: "widgets-choicelist widgets-edit"})
 		}
 	}
 	get isList() { return true }
-}
-
+} 
+  
 defParser(Choice,"div","widgets-choice")
-defParser(MultipleChoice,"div","widgets-multiplechoice")
-
+defParser(ChoiceList,"div","widgets-choicelist")
+ 
 Choice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",node.attrs)
-
-MultipleChoice.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",node.attrs)
-
+ 
+ChoiceList.prototype.serializeDOM = (node,s) => s.renderAs(node,"div",node.attrs)
+ 
 function renumber(pm, node) {
 	let i = 1
 	node.forEach(ch => {
@@ -46,8 +46,7 @@ function renumber(pm, node) {
 	})
 }
 
-Choice.register("command", {
-  name: "splitChoice",
+Choice.register("command", "split", {
   label: "Split the current choice",
   run(pm) {
     let {from, to, node} = pm.selection
@@ -62,9 +61,8 @@ Choice.register("command", {
   keys: ["Enter(19)"]
 })
 
-Choice.register("command", {
-  name: "deleteChoice",
-  label: "delete this choice or multiplechoice",
+Choice.register("command", "delete", {
+  label: "delete this choice or choicelist",
   run(pm) {
 	let {from,to} = pm.selection
     return pm.tr.delete(from.move(-1),to).apply(andScroll)
@@ -72,9 +70,8 @@ Choice.register("command", {
   keys: ["Backspace(20)", "Mod-Backspace(20)"]
 })
 
-MultipleChoice.register("command",{
-	name: "insertMultipleChoice",
-	label: "MultipleChoice",
+ChoiceList.register("command", "insert", {
+	label: "ChoiceList",
 	run(pm, name, title) {
     	let mc = this.create({name, title}, pm.schema.node("choice",{name, value: 0}))
    		let tr = pm.tr.replaceSelection(mc).apply(andScroll)
@@ -91,13 +88,12 @@ MultipleChoice.register("command",{
  		  options: {
  			  pattern: namePattern, 
  			  size: 10, 
- 			  title: nameTitle}},
-	 	{ name: "Title", label: "Description", type: "text", 
-	      prefill: function(pm) { return selectedNodeAttr(pm, this, "title") }}
+ 			  title: nameTitle}
+   	  	}
 	]
 })
 
-defParamsClick(MultipleChoice,"schema:multiplechoice:insertMultipleChoice")
+defParamsClick(ChoiceList,"choicelist:insert")
 
 insertCSS(`
 
@@ -105,21 +101,10 @@ insertCSS(`
 	float: left;
 }
 
-div.widgets-choice:first-child input {
-	display: none;
-}
-
-.widgets-multiplechoice:before {
-	content: attr(title);
-	color: black;
-	font-size: 14px;
-	font-weight: bold;
-}
-
 .ProseMirror .widgets-choice:hover {
 	cursor: text;
 }
 
-.ProseMirror .widgets-multiplechoice {}
+.ProseMirror .widgets-choicelist {}
 
 `)
