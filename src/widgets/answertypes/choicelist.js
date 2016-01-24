@@ -1,6 +1,6 @@
-import {Block, Textblock, Paragraph, TextNode, Text, Fragment, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
-import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
+import {Block, Textblock, Paragraph, TextNode, Text, Fragment, Attribute, Pos} from "C:/Users/pboysen/git/prosemirror/dist/model"
+import {elt, insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../../utils"
 
 export class Choice extends Block {
 	static get kinds() { return "choice" }
@@ -24,7 +24,6 @@ export class ChoiceList extends Block {
 	get attrs() {
 		return {
 			name: new Attribute,
-			title: new Attribute,
 			class: new Attribute({default: "widgets-choicelist widgets-edit"})
 		}
 	}
@@ -72,8 +71,8 @@ Choice.register("command", "delete", {
 
 ChoiceList.register("command", "insert", {
 	label: "ChoiceList",
-	run(pm, name, title) {
-    	let mc = this.create({name, title}, pm.schema.node("choice",{name, value: 0}))
+	run(pm, name) {
+    	let mc = this.create({name}, pm.schema.node("choice",{name, value: 1}))
    		let tr = pm.tr.replaceSelection(mc).apply(andScroll)
   		return tr
    		// need to move to newly added node

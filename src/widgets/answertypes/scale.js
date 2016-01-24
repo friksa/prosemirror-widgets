@@ -1,6 +1,6 @@
-import {Block, Paragraph, Attribute} from "../../../../git/prosemirror/dist/model"
-import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
+import {Block, Paragraph, Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
+import {elt, insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../../utils"
 
 export class Scale extends Block {
 	static get contains() { return "paragraph"}

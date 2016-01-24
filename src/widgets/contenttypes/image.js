@@ -1,6 +1,6 @@
-import {Inline, Attribute} from "../../../../git/prosemirror/dist/model"
-import {elt,insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, selectedNodeAttr} from "../utils"
+import {Inline, Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
+import {elt,insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {defParser, defParamsClick, andScroll, selectedNodeAttr} from "../../utils"
 
 export class Image extends Inline {
 	get attrs() {

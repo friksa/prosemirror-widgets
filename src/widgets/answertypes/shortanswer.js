@@ -1,7 +1,7 @@
-import {Attribute} from "../../../../git/prosemirror/dist/model"
-import {insertCSS} from "../../../../git/prosemirror/dist/dom"
+import {Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
+import {insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
 import {Input} from "./input"
-import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../../utils"
 
 export class ShortAnswer extends Input {
 	get attrs() {
@@ -21,7 +21,7 @@ ShortAnswer.prototype.serializeDOM = (node,s) => s.renderAs(node,"input",node.at
 
 
 ShortAnswer.register("command", "insert", {
-	label: "ShortAnswer",
+	label: "Short Answer",
 	run(pm, name, size) {
     	return pm.tr.replaceSelection(this.create({name,size})).apply(andScroll)
   	},

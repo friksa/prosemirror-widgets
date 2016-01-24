@@ -1,6 +1,6 @@
-import {Inline, Attribute} from "../../../../git/prosemirror/dist/model"
-import {insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser} from "../utils"
+import {Inline, Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
+import {insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {defParser} from "../../utils"
 
 export class Input extends Inline {
 	get contains() { return null}

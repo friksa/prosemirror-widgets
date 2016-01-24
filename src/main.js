@@ -79,24 +79,29 @@ insertCSS(`
 	min-height: 200px;
 }
 
-div.ProseMirror-select-menu {
+div.ProseMirror-dropdown-menu {
   position: absolute;
-  top: 25px !Important; 
-  background: #0191C8;
-  color: white;
+  background: white;
+  color: black;
   border-radius: 6px;
   padding: 2px 2px;
   z-index: 15;
 }
 
-div.ProseMirror-select-menu {
+div.ProseMirror-dropdown-menu {
   cursor: pointer;
   padding: 0 1em 0 2px;
 }
 
-div.ProseMirror-select-menu div:hover {
-  background: #D6F2F8;
-  color: #0191C8;
+.ProseMirror-dropdown-menu div:nth-child(1), div:nth-child(9) {
+	 font-weight: bold;
+}
+
+.ProseMirror-dropdown-menu div:nth-child(1):hover, 
+.ProseMirror-dropdown-menu div:nth-child(9):hover
+{
+	background: white;
+	color: inherit;
 }
 
 div.ProseMirror-menubar-inner {

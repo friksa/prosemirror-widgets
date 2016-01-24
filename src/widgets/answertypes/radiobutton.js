@@ -1,6 +1,6 @@
-import {Attribute} from "../../../../git/prosemirror/dist/model"
-import {insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser} from "../utils"
+import {Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
+import {insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {defParser} from "../../utils"
 import {Input} from "./input"
 
 export class RadioButton extends Input {

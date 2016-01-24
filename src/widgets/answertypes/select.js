@@ -1,6 +1,6 @@
-import {Block, Inline, Attribute} from "../../../../git/prosemirror/dist/model"
-import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
+import {Block, Inline, Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
+import {elt, insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../../utils"
 
 export class Select extends Inline {
 	get contains() { return null}
@@ -41,9 +41,10 @@ Select.register("command", "insert", {
      	{ name: "Selection", label: "Selection (single or multiple)", type: "select", 
 		  prefill: function(pm) { return selectedNodeAttr(pm, this, "multiple") },
 		  options: [
-     	    {value: "multiple", label:"multiple"},
-     	    {value: "single", label:"single"}
-     	]}
+     	      {value: "multiple", label:"multiple"},
+     	      {value: "single", label:"single"}
+     	  ]
+		}
 	]
 })
 

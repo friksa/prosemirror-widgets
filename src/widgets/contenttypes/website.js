@@ -1,6 +1,6 @@
-import {Block, Attribute} from "../../../../git/prosemirror/dist/model"
-import {insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, selectedNodeAttr} from "../utils"
+import {Block, Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
+import {insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {defParser, defParamsClick, andScroll, selectedNodeAttr} from "../../utils"
 
 export class Website extends Block {
 	get attrs() {
@@ -31,7 +31,7 @@ Website.register("command", "insert", {
     	return pm.tr.replaceSelection(this.create({src, width, height})).apply(andScroll)
   	},
 	params: [
-     	{ name: "URL", label: "Link to website, youTube, Google Maps ...", type: "url", default:"http://www.iastate.edu",
+     	{ name: "URL", label: "Link to website, youTube, Google Maps ...", type: "url",
        	  prefill: function(pm) { return selectedNodeAttr(pm, this, "src") }},
      	{ name: "Width", label: "Width in pixels", type: "number", default: 200, 
           prefill: function(pm) { return selectedNodeAttr(pm, this, "width") },

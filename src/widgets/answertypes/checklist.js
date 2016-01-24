@@ -1,6 +1,6 @@
-import {Block, Paragraph, Attribute, Pos} from "../../../../git/prosemirror/dist/model"
-import {elt, insertCSS} from "../../../../git/prosemirror/dist/dom"
-import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../utils"
+import {Block, Paragraph, Attribute, Pos} from "C:/Users/pboysen/git/prosemirror/dist/model"
+import {elt, insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../../utils"
 
 export class CheckItem extends Block {
 	static get kinds() { return "checkitem" }
@@ -24,7 +24,6 @@ export class CheckList extends Block {
 	get attrs() {
 		return {
 			name: new Attribute,
-			title: new Attribute,
 			layout: new Attribute({default: "vertical"}),
 			class: new Attribute({default: "widgets-checklist widgets-edit"})
 		}
@@ -65,14 +64,13 @@ CheckItem.register("command", "delete",{
 
 CheckList.register("command", "insert", {
 	label: "Check List",
-	run(pm, name, title, layout) {
-		let cl = this.create({name, title, layout}, pm.schema.node("checkitem",{name, value: 1}))
+	run(pm, name, layout) {
+		let cl = this.create({name, layout}, pm.schema.node("checkitem",{name, value: 1}))
 		let tr = pm.tr.replaceSelection(cl).apply(andScroll)
 		return tr
   	},
 	select(pm) {
   		return true
-		//return pm.doc.path(pm.selection.from.path).type.canContainType(this)
 	},
 	params: [
  	    { name: "Name", label: "Short ID", type: "text",
@@ -81,13 +79,11 @@ CheckList.register("command", "insert", {
  			  pattern: namePattern, 
  			  size: 10, 
  			  title: nameTitle}},
-	    { name: "Title", label: "Title", type: "text",
-	      prefill: function(pm) { return selectedNodeAttr(pm, this, "title") }},
-	    { name: "Layout", label: "vertical or horizontal", type: "select",
+	    { name: "Layout", label: "vertical or horizontal", type: "select", default: "vertical",
 	      prefill: function(pm) { return selectedNodeAttr(pm, this, "layout") },
 	      options: [
-     	      {value: "horizontal", label: "horizontal"},
-     	      {value: "vertical", label: "vertical"}
+	       	  {value: "vertical", label: "vertical"},
+     	      {value: "horizontal", label: "horizontal"}
      	  ]}
 	]
 })
@@ -106,13 +102,6 @@ div.widgets-checkitem:first-child input {
 
 .ProseMirror .widgets-checkitem:hover {
 	cursor: text;
-}
-
-.widgets-checklist:before {
-	content: attr(title);
-	color: black;
-	font-size: 14px;
-	font-weight: bold;
 }
 
 .ProseMirror .widgets-checklist {}
