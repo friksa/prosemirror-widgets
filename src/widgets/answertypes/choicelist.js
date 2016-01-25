@@ -2,9 +2,8 @@ import {Block, Textblock, Paragraph, TextNode, Text, Fragment, Attribute, Pos} f
 import {elt, insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../../utils"
 
-export class Choice extends Block {
+export class Choice extends Textblock {
 	static get kinds() { return "choice" }
-	get isTextblock() { return true }
 	get attrs() {
 		return {
 			name: new Attribute(),
@@ -28,6 +27,9 @@ export class ChoiceList extends Block {
 		}
 	}
 	get isList() { return true }
+	create(attrs, content, marks) {
+		return super.create(attrs,[this.schema.node("choice",{name: attrs.name, value:1})],marks)
+	}
 } 
   
 defParser(Choice,"div","widgets-choice")
@@ -72,10 +74,8 @@ Choice.register("command", "delete", {
 ChoiceList.register("command", "insert", {
 	label: "ChoiceList",
 	run(pm, name) {
-    	let mc = this.create({name}, pm.schema.node("choice",{name, value: 1}))
-   		let tr = pm.tr.replaceSelection(mc).apply(andScroll)
-  		return tr
-   		// need to move to newly added node
+//    	let mc = this.create({name}, pm.schema.node("choice",{name, value: 1}))
+   		return pm.tr.replaceSelection(this.create({name})).apply(andScroll)
 	},
 	select(pm) {
 		return true

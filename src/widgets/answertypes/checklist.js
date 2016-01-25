@@ -57,7 +57,7 @@ CheckItem.register("command", "delete",{
 	label: "delete this checkitem or checklist",
 	run(pm) {
 		let {from,to} = pm.selection
-	    return pm.tr.delete(from.move(-1),to).apply(andScroll)
+	    return pm.tr.delete(from,to).apply(andScroll)
 	},
 	keys: ["Backspace(50)", "Mod-Backspace(50)"]
 })
@@ -65,9 +65,7 @@ CheckItem.register("command", "delete",{
 CheckList.register("command", "insert", {
 	label: "Check List",
 	run(pm, name, layout) {
-		let cl = this.create({name, layout}, pm.schema.node("checkitem",{name, value: 1}))
-		let tr = pm.tr.replaceSelection(cl).apply(andScroll)
-		return tr
+		return pm.tr.replaceSelection(this.create({name, layout})).apply(andScroll)
   	},
 	select(pm) {
   		return true
@@ -104,6 +102,7 @@ div.widgets-checkitem:first-child input {
 	cursor: text;
 }
 
-.ProseMirror .widgets-checklist {}
+.ProseMirror .widgets-checklist {
+}
 
 `)
