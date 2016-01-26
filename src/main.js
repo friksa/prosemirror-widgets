@@ -1,18 +1,27 @@
-import {ProseMirror} from "../../../git/prosemirror/dist/edit"
-import {insertCSS} from "../../../git/prosemirror/dist/dom"
-import "../../../git/prosemirror/dist/menu/tooltipmenu"
-import "../../../git/prosemirror/dist/menu/menubar"
-import "../../../git/prosemirror/dist/inputrules/autoinput"
+import {ProseMirror} from "prosemirror/dist/edit"
+import {insertCSS} from "prosemirror/dist/dom"
+import "prosemirror/dist/menu/tooltipmenu"
+import "prosemirror/dist/menu/menubar"
+import "prosemirror/dist/inputrules/autoinput"
 import {widgetParamHandler, defineFileHandler} from "./utils"
  
 import {Doc, Textblock, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule,
 	Paragraph, Heading, Text, HardBreak,
-	EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "../../../git/prosemirror/dist/model"
+	EmMark, StrongMark, LinkMark, CodeMark, Schema, SchemaSpec} from "prosemirror/dist/model"
 
 import {Input, Content, Answers, ShortAnswer, Essay, CheckBox, RadioButton, Select, 
 	Website, InlineMath, BlockMath, Image, SpreadSheet, CarryForward,
 	Choice, ChoiceList, Scale, CheckItem, CheckList} from "./widgets"
 
+/*import {InputRule} from "prosemirror/dist/inputrules"
+let urlex = /((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/
+LinkMark.register("autoInput","startLink", new InputRule(urlex," ",
+	function(pm, match, pos) {
+		let url = match[0]
+		console.log(url)
+		pm.setMark(this,pos,{href: url, title: ""})
+	}
+))*/
 
 const widgetSpec = new SchemaSpec({
 	doc: Doc,
@@ -94,7 +103,9 @@ div.ProseMirror-dropdown-menu {
 }
 
 .ProseMirror-dropdown-menu div:nth-child(1), div:nth-child(9) {
-	 font-weight: bold;
+  font-weight: bold;
+  border-top: 1px solid #AAA;	
+  border-bottom: 1px solid #AAA;	
 }
 
 .ProseMirror-dropdown-menu div:nth-child(1):hover, 

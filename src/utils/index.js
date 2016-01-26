@@ -1,6 +1,5 @@
 export {widgetParamHandler, defineFileHandler, namePattern, nameTitle, defParamsClick, selectedNodeAttr} from "./params"
-export {Content, Answers} from "./divider"
-import {selectableNodeAbove} from "C:/Users/pboysen/git/prosemirror/dist/edit/selection"
+import {selectableNodeAbove} from "prosemirror/dist/edit/selection"
 import {widgetParamHandler} from "./params"
 
 export const andScroll = {scrollIntoView: true}

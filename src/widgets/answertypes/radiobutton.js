@@ -1,5 +1,5 @@
-import {Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
-import {insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {Attribute} from "prosemirror/dist/model"
+import {insertCSS} from "prosemirror/dist/dom"
 import {defParser} from "../../utils"
 import {Input} from "./input"
 

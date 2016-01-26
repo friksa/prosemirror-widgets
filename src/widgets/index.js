@@ -1,7 +1,7 @@
 export {Answers,Input, CheckBox, RadioButton, CheckList, CheckItem, ChoiceList, Choice, Scale, Select, Essay, ShortAnswer} from "./answertypes"
 export {Content,BlockMath,CarryForward,Image,InlineMath,SpreadSheet,Website} from "./contenttypes"
 
-import {insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {insertCSS} from "prosemirror/dist/dom"
 import {Answers, Input, CheckBox, RadioButton, CheckList, CheckItem, ChoiceList, Choice, Scale, Select, Essay, ShortAnswer} from "./answertypes"
 import {Content, BlockMath, CarryForward, Image, InlineMath, SpreadSheet, Website} from "./contenttypes"
 

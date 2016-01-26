@@ -1,5 +1,5 @@
-import {Block, Paragraph, Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
-import {elt, insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {Block, Paragraph, Attribute} from "prosemirror/dist/model"
+import {elt, insertCSS} from "prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../../utils"
 
 export class Scale extends Block {
@@ -7,7 +7,6 @@ export class Scale extends Block {
 	get attrs() {
 		return {
 			name: new Attribute,
-			title: new Attribute,
 			startvalue: new Attribute({default: "1"}),
 			startlabel: new Attribute({default: "low"}),
 			endvalue: new Attribute({default: "10"}),
@@ -19,7 +18,7 @@ export class Scale extends Block {
 defParser(Scale,"div","widgets-scale")
 
 Scale.prototype.serializeDOM = (node,s) => {
-	let dom = s.renderAs(node,"div",{class: "widgets-scale widgets-edit", title: node.attrs.title, contenteditable: false})
+	let dom = s.renderAs(node,"div",{class: "widgets-scale widgets-edit", contenteditable: false})
 	let para = elt("p")
 	dom.appendChild(para)
 	para.appendChild(elt("span", null, node.attrs.startlabel+" "))
@@ -50,9 +49,8 @@ Scale.prototype.serializeDOM = (node,s) => {
 
 Scale.register("command", "insert",{
 	label: "Scale",
-	run(pm, name, title, startvalue, startlabel, endvalue, endlabel) {
-		let para = pm.schema.node("paragraph")
-    	return pm.tr.replaceSelection(this.create({name,title,startvalue,startlabel,endvalue,endlabel},para)).apply(andScroll)
+	run(pm, name, startvalue, startlabel, endvalue, endlabel) {
+    	return pm.tr.replaceSelection(this.create({name,startvalue,startlabel,endvalue,endlabel})).apply(andScroll)
   	},
 	params: [
   	    { name: "Name", label: "Short ID", type: "text",
@@ -61,8 +59,6 @@ Scale.register("command", "insert",{
    			  pattern: namePattern, 
    			  size: 10, 
    			  title: nameTitle}},
-	 	{ name: "Title", label: "Scale Title", type: "text",
-	      prefill: function(pm) { return selectedNodeAttr(pm, this, "title") }},
      	{ label: "Start value", type: "number", default: 1, 
 		  prefill: function(pm) { return selectedNodeAttr(pm, this, "startvalue") }},
      	{ name: "Start Label", label: "Text on left", type: "text", default: "low",
@@ -84,14 +80,6 @@ insertCSS(`
 }
 
 .widgets-scaleitem input {
-	display: block;
-}
-
-.widgets-scale:before {
-	content: attr(title);
-	color: black;
-	font-size: 14px;
-	font-weight: bold;
 	display: block;
 }
 

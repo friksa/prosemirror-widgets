@@ -1,5 +1,5 @@
-import {Block, Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
-import {insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {Block, Attribute} from "prosemirror/dist/model"
+import {insertCSS} from "prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr, getLastClicked} from "../../utils"
 
 export class Essay extends Block {

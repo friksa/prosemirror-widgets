@@ -1,8 +1,8 @@
-import {elt,insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
-import {paramTypes} from "C:/Users/pboysen/git/prosemirror/dist/menu/menu"
-import {defineDefaultParamHandler} from "C:/Users/pboysen/git/prosemirror/dist/edit"
-import {selectableNodeAbove} from "C:/Users/pboysen/git/prosemirror/dist/edit/selection"
-import {AssertionError} from "C:/Users/pboysen/git/prosemirror/dist/util/error"
+import {elt,insertCSS} from "prosemirror/dist/dom"
+import {paramTypes} from "prosemirror/dist/menu/menu"
+import {defineDefaultParamHandler} from "prosemirror/dist/edit"
+import {selectableNodeAbove} from "prosemirror/dist/edit/selection"
+import {AssertionError} from "prosemirror/dist/util/error"
 
 let fhandler = null
 

@@ -1,5 +1,5 @@
-import {Block, Attribute} from "C:/Users/pboysen/git/prosemirror/dist/model"
-import {elt,insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {Block, Attribute} from "prosemirror/dist/model"
+import {elt,insertCSS} from "prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, selectedNodeAttr} from "../../utils"
  
 export class BlockMath extends Block {

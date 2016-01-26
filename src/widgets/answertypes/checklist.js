@@ -1,5 +1,5 @@
-import {Block, Paragraph, Attribute, Pos} from "C:/Users/pboysen/git/prosemirror/dist/model"
-import {elt, insertCSS} from "C:/Users/pboysen/git/prosemirror/dist/dom"
+import {Block, Paragraph, Attribute, Pos} from "prosemirror/dist/model"
+import {elt, insertCSS} from "prosemirror/dist/dom"
 import {defParser, defParamsClick, andScroll, namePattern, nameTitle, selectedNodeAttr} from "../../utils"
 
 export class CheckItem extends Block {
